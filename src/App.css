@@ -5,10 +5,3 @@
   text-align: center;
   background-color: #fff4e6;
 }
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* justify-content: center; */
-}

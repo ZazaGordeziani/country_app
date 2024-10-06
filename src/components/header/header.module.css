@@ -14,23 +14,10 @@
   height: 64px;
   justify-self: center;
 }
-.headerTitle {
-  font-size: 32px;
-}
 
 .titleBox {
   display: flex;
   align-items: center;
   gap: 20px;
   margin-left: 40px;
-}
-.nav {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  margin-right: 40px;
-}
-
-.navItem {
-  font-size: 25px;
 }

@@ -1,6 +1,6 @@
 import styles from "./footer.module.css";
 
-const Footer: React.FC = () => {
+const Footer: React.FC<{ copywright: string }> = ({ copywright }) => {
   return (
     <>
       <div className={styles.footer}>
@@ -22,9 +22,7 @@ const Footer: React.FC = () => {
           />
         </div>
 
-        <h2 className={styles.footerCopyright}>
-          © 2024 Global Travel. All Rights Reserved.
-        </h2>
+        <h2 className={styles.footerCopyright}>{copywright}</h2>
       </div>
     </>
   );

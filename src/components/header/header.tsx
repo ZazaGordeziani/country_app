@@ -1,6 +1,11 @@
+import React, { PropsWithChildren } from "react";
 import styles from "./header.module.css";
 
-const Header: React.FC = () => {
+const Header: React.FC<PropsWithChildren> = ({ children }) => {
+  const childArray = React.Children.toArray(children);
+  const headerTitle = childArray[0];
+  const navItems = childArray[1];
+
   return (
     <header className={styles.header}>
       <div className={styles.titleBox}>
@@ -9,17 +14,9 @@ const Header: React.FC = () => {
           src="https://uxwing.com/wp-content/themes/uxwing/download/location-travel-map/earth-icon.png"
           alt="globe image"
         />
-        <h1 className={styles.headerTitle}>
-          {" "}
-          Travel Around and Explore New Cultures{" "}
-        </h1>
+        {headerTitle}
       </div>
-
-      <nav className={styles.nav}>
-        <p className={styles.navItem}>Booking</p>
-        <p className={styles.navItem}>About us</p>
-        <p className={styles.navItem}>Contact us</p>
-      </nav>
+      {navItems}
     </header>
   );
 };

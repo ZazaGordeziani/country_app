@@ -1,12 +1,7 @@
+import { PropsWithChildren } from "react";
 import styles from "./card.module.css";
 
-const country = {
-  name: "Nicaragua",
-  capital: "Managua",
-  population: "6,359,689",
-};
-
-const Card = () => {
+const Card: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className={styles.countryCard}>
       <img
@@ -15,9 +10,9 @@ const Card = () => {
         alt="Nicaragua Flag"
       />
       <div className={styles.countryDetails}>
-        <h2 className={styles.name}>Name: {country.name}</h2>
-        <p>Capital: {country.capital}</p>
-        <p>Population: {country.population}</p>
+        {children}
+        {/* <p>Capital: {capital}</p>
+        <p>Population: {population}</p> */}
       </div>
     </div>
   );
