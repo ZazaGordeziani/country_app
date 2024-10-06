@@ -1,0 +1,26 @@
+.footer {
+  height: 60px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+
+.media {
+  margin-left: 52px;
+  display: flex;
+  gap: 25px;
+}
+
+.footerLogos {
+  width: 16px;
+  height: 16px;
+}
+
+.footerCopyright {
+  margin-right: 52px;
+  font-size: 16px;
+  color: black;
+}

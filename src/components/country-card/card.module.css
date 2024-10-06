@@ -1,0 +1,30 @@
+.countryCard {
+  /* width: 600px; */
+
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  gap: 40px;
+}
+
+.flag {
+  width: 658px;
+  height: 400px;
+}
+
+.countryDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.name {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.countryDetails p {
+  font-size: 20px;
+}
