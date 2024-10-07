@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import styles from "./header.module.css";
+// import { Link } from "react-router-dom";
 
 const Header: React.FC<PropsWithChildren> = ({ children }) => {
   const childArray = React.Children.toArray(children);
@@ -14,6 +15,7 @@ const Header: React.FC<PropsWithChildren> = ({ children }) => {
           src="https://uxwing.com/wp-content/themes/uxwing/download/location-travel-map/earth-icon.png"
           alt="globe image"
         />
+
         {headerTitle}
       </div>
       {navItems}

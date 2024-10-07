@@ -1,12 +1,25 @@
 .hero {
-  /* width: 700px; */
+  width: 100%;
+
+  position: relative;
   height: 500px;
   background-image: url(https://t3.ftcdn.net/jpg/09/60/30/30/240_F_960303003_I31zzufV8ALH0NPAO4mKnOgbt8SIppBZ.jpg);
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  /* left: 315px; */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1; /* Make sure the overlay is below the content */
 }

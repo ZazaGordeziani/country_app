@@ -1,45 +1,34 @@
-import Header from "@/components/header";
-import { HeaderTitle } from "@/components/header/headerTitle";
-import { HeaderNav } from "@/components/header/HeaderNav";
-import { HeaderNavItem } from "@/components/header/headerNavItem";
-import Hero from "@/components/hero";
-import Card from "@/components/country-card/card";
-import Footer from "@/components/footer";
-import HeroTitle from "@/components/hero/hero-title/title";
-import { HeroSubtitle } from "@/components/hero/hero-subtitle";
-import CountryName from "@/components/country-card/country-name/countryName";
-import { CountryCapital } from "@/components/country-card/country-capital/capital";
-import { CountryPopulation } from "@/components/country-card/country-population/population";
 import "@/App.css";
+// import HomeListView from "@/pages/views/list";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Suspense } from "react";
+import { lazy } from "react";
+import PageNotFound from "@/pages/404";
 
-const country = {
-  name: "Nicaragua",
-  capital: "Managua",
-  population: "6,359,689",
-};
+const LazyDefaultLayout = lazy(() => import("@/layouts/default"));
+const LazyAboutView = lazy(() => import("@/pages/about/views/about"));
+const LazyContactView = lazy(() => import("@/pages/contact/views/index"));
+const LazyBookingView = lazy(() => import("@/pages/booking/views/index"));
+const LazeHomeListView = lazy(() => import("@/pages/views/list/index"));
 
 const App: React.FC = () => {
   return (
     <>
-      <Header>
-        <HeaderTitle title="Travel Around and Explore New Cultures" />
-        <HeaderNav>
-          <HeaderNavItem text="Booking" />
-          <HeaderNavItem text="About us" />
-          <HeaderNavItem text="Contact us" />
-        </HeaderNav>
-      </Header>
-      <Hero>
-        <HeroTitle title="Welcome to Global Getaways" />
-        <HeroSubtitle subtitle="Let us guide you to your next adventure!" />
-      </Hero>
+      <BrowserRouter>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route element={<LazyDefaultLayout />}>
+              <Route path="/" element={<LazeHomeListView />} />
+              <Route path="booking" element={<LazyBookingView />} />
 
-      <Card>
-        <CountryName name={country.name} />
-        <CountryCapital capital={country.capital} />
-        <CountryPopulation population={country.population} />
-      </Card>
-      <Footer copywright=" © 2024 Global Travel. All Rights Reserved." />
+              <Route path="about" element={<LazyAboutView />} />
+              <Route path="contact" element={<LazyContactView />} />
+            </Route>
+
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
     </>
   );
 };
