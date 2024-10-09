@@ -26,6 +26,9 @@ const DefaultLayOut = () => {
           <HeaderTitle title="Travel Around and Explore New Cultures" />
         </Link>
         <HeaderNav>
+          <NavLink className={handleActiveNav} to="home">
+            <HeaderNavItem text="Home" />
+          </NavLink>
           <NavLink className={handleActiveNav} to="booking">
             <HeaderNavItem text="Booking" />
           </NavLink>

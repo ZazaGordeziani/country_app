@@ -5,11 +5,13 @@ import { Suspense } from "react";
 import { lazy } from "react";
 import PageNotFound from "@/pages/404";
 
+import CountryDetailedInfo from "@/pages/views/countryDetails";
+
 const LazyDefaultLayout = lazy(() => import("@/layouts/default"));
 const LazyAboutView = lazy(() => import("@/pages/about/views/about"));
 const LazyContactView = lazy(() => import("@/pages/contact/views/index"));
 const LazyBookingView = lazy(() => import("@/pages/booking/views/index"));
-const LazeHomeListView = lazy(() => import("@/pages/views/list/index"));
+const LazyHomeListView = lazy(() => import("@/pages/views/list/index"));
 
 const App: React.FC = () => {
   return (
@@ -18,13 +20,16 @@ const App: React.FC = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route element={<LazyDefaultLayout />}>
-              <Route path="/" element={<LazeHomeListView />} />
+              <Route path="/" element={<div>landing...</div>} />
+
+              <Route path="home" element={<LazyHomeListView />}></Route>
+
+              <Route path="articles/:id" element={<CountryDetailedInfo />} />
               <Route path="booking" element={<LazyBookingView />} />
 
               <Route path="about" element={<LazyAboutView />} />
               <Route path="contact" element={<LazyContactView />} />
             </Route>
-
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
