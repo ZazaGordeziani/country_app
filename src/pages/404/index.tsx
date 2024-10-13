@@ -4,7 +4,7 @@ const PageNotFound = () => {
   return (
     <div style={{ color: "red", fontSize: 40 }}>
       404
-      <NavLink to="/">Return Back to Home</NavLink>
+      <NavLink to="Home">Return Back to Home</NavLink>
     </div>
   );
 };

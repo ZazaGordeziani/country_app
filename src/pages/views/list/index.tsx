@@ -24,26 +24,32 @@ const HomeListView = () => {
 
       {}
 
-      <Card>
+      <Card id={CountriesList[0].id}>
         <CountryName name={CountriesList[0].name} />
-        <CountryFlag flag={CountriesList[0].flag!} />
+        <CountryFlag flag={CountriesList[0].flag} />
         {/* <CountryCapital capital={CountriesList[0].capital} />
         <CountryPopulation population={CountriesList[0].population} /> */}
       </Card>
 
       {}
 
-      <Card>
+      <Card id={CountriesList[1].id}>
         <CountryName name={CountriesList[1].name} />
-        <CountryFlag flag={CountriesList[1].flag!} />
+        <CountryFlag flag={CountriesList[1].flag} />
         {/* <CountryCapital capital={CountriesList[1].capital} />
         <CountryPopulation population={CountriesList[1].population} /> */}
       </Card>
 
       {}
-      <Card>
+      <Card id={CountriesList[2].id}>
         <CountryName name={CountriesList[2].name} />
-        <CountryFlag flag={CountriesList[2].flag!} />
+        <CountryFlag flag={CountriesList[2].flag} />
+        {/* <CountryCapital capital={CountriesList[2].capital} />
+        <CountryPopulation population={CountriesList[2].population} /> */}
+      </Card>
+      <Card id={CountriesList[3].id}>
+        <CountryName name={CountriesList[3].name} />
+        <CountryFlag flag={CountriesList[3].flag} />
         {/* <CountryCapital capital={CountriesList[2].capital} />
         <CountryPopulation population={CountriesList[2].population} /> */}
       </Card>

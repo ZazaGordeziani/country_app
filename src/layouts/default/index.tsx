@@ -32,7 +32,7 @@ const DefaultLayOut = () => {
           <NavLink className={handleActiveNav} to="booking">
             <HeaderNavItem text="Booking" />
           </NavLink>
-          <NavLink className={handleActiveNav} to="/about">
+          <NavLink className={handleActiveNav} to="about">
             <HeaderNavItem text="About us" />
           </NavLink>
           <NavLink className={handleActiveNav} to="contact">
