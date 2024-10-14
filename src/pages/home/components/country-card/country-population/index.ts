@@ -1,1 +1,1 @@
-export * from "./population.module.css";
+export * from "./population";

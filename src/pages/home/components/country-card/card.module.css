@@ -1,19 +1,9 @@
 .countryCard {
   width: 100%;
 
-  /* display: flex; */
   align-items: center;
   flex-direction: row;
-  /* gap: 40px; */
-
-  /* justify-content: center; */
-  /* gap: 200px; */
 }
-
-/* .flag {
-  width: 50%;
-  height: 400px;
-} */
 
 .countryDetails {
   width: 100%;
@@ -23,15 +13,16 @@
   justify-content: center;
   align-items: center;
   padding-bottom: 44px;
+  padding-top: 44px;
   border-bottom: 2px solid black;
 }
 
+/* .countryDetails:first-child {
+  padding-top: 0px;
+} */
+
 .links {
+  font-size: 20px;
   color: black;
-  text-decoration: none;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px; */
+  font-weight: bold;
 }
