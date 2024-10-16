@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { FormEvent, FormEventHandler, useState } from "react";
 import styles from "./card.module.css";
 import { Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
 import Vote from "@/pages/home/components/country-card/vote";
 import Sorting from "@/pages/home/components/country-card/sorting";
+import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
 // import { CountriesList } from "@/pages/home/static/dummy-data";
 
 const Card: React.FC = () => {
@@ -85,12 +86,33 @@ const Card: React.FC = () => {
       setCountryList(sortedCountriesList);
     }
   };
+  const handleCreateCountry = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const countryObj: any = {};
+    const formData = new FormData(e.currentTarget);
+
+    for (const [key, value] of formData) {
+      countryObj[key] = value;
+    }
+    const updatedCountryList = [
+      ...countriesList,
+      {
+        ...countryObj,
+        flag: "flag source needed",
+        vote: 0,
+        id: (Number(countriesList.at(-1)?.id) + 1).toString(),
+      },
+    ];
+    setCountryList(updatedCountryList);
+    console.log(countryObj);
+  };
   return (
     <>
       <Sorting
         onSortAsc={() => handleCountriesSortByLikes("asc")}
         onSortDesc={() => handleCountriesSortByLikes("desc")}
       />
+      <CountryCreateForm onCountryCreate={handleCreateCountry} />
       <div className={styles.countryCard}>
         {countriesList.map((country) => (
           <div key={country.id}>
