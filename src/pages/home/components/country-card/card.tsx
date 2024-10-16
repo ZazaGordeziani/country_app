@@ -1,4 +1,4 @@
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, useReducer } from "react";
 import styles from "./card.module.css";
 import { Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
@@ -7,85 +7,25 @@ import Vote from "@/pages/home/components/country-card/vote";
 import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
 // import { CountriesList } from "@/pages/home/static/dummy-data";
+import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
+import { countriesReducer } from "@/pages/home/components/country-card/reducer/reducer";
+// import { CountriesList } from "@/pages/home/static/dummy-data";
 
 const Card: React.FC = () => {
-  const [countriesList, setCountryList] = useState<
-    {
-      flag: string;
-      name: string;
-      capital: string;
-      population: string;
-      id: string;
-      vote: number;
-    }[]
-  >([
-    {
-      flag: "https://cdn.britannica.com/19/7219-050-7D2C062F/Flag-Nicaragua.jpg",
-      name: "Nicaragua",
-      capital: "Managua",
-      population: "6 942 006",
-      id: "1",
-      vote: 0,
-    },
-
-    {
-      flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/640px-Flag_of_Mexico.svg.png",
-      name: "Mexico",
-      capital: "Mexico",
-      population: "131 168 985",
-      id: "2",
-      vote: 0,
-    },
-
-    {
-      flag: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg",
-      name: "Ecuador ",
-      capital: "Quito",
-      population: "18 179 273",
-      id: "3",
-      vote: 0,
-    },
-
-    {
-      flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/1200px-Flag_of_Jamaica.svg.png",
-      name: "Jamaica",
-      capital: "Kingston",
-      population: "2 838 582",
-      id: "4",
-      vote: 0,
-    },
-  ]);
+  const [countriesList, dispatch] = useReducer(countriesReducer, CountriesList);
 
   const handleCountryUpvote = (id: string) => {
     return () => {
-      const updatedCountriesList = countriesList.map((country) => {
-        if (country.id === id) {
-          return { ...country, vote: country.vote + 1 };
-        }
-        return { ...country };
-      });
+      dispatch({ type: "upvote", payload: { id } });
 
-      setCountryList(updatedCountriesList);
+      // setCountryList(updatedCountriesList);
     };
   };
 
-  const handleCountriesSortByLikes = (type: "asc" | "desc") => {
-    const copiedcountriesList = [...countriesList];
-    if (type === "asc") {
-      const sortedCountriesList = copiedcountriesList.sort((a, b) => {
-        return a.vote - b.vote;
-      });
-      setCountryList(sortedCountriesList);
-    }
-
-    if (type === "desc") {
-      const sortedCountriesList = copiedcountriesList.sort((a, b) => {
-        return b.vote - a.vote;
-      });
-
-      setCountryList(sortedCountriesList);
-    }
+  const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
+    dispatch({ type: "sort", payload: { sortType } });
   };
+
   const handleCreateCountry = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const countryObj: any = {};
@@ -94,17 +34,17 @@ const Card: React.FC = () => {
     for (const [key, value] of formData) {
       countryObj[key] = value;
     }
-    const updatedCountryList = [
-      ...countriesList,
-      {
-        ...countryObj,
-        flag: "flag source needed",
-        vote: 0,
-        id: (Number(countriesList.at(-1)?.id) + 1).toString(),
-      },
-    ];
-    setCountryList(updatedCountryList);
-    console.log(countryObj);
+
+    dispatch({ type: "create", payload: { countryObj } });
+    // setCountryList(updatedCountryList);
+    // console.log(countryObj);
+  };
+
+  const hanldeCountryDelete = (e: MouseEvent, id: string) => {
+    e.preventDefault();
+
+    dispatch({ type: "delete", payload: { id } });
+    // setCountryList(filteredCountriesList);
   };
   return (
     <>
@@ -125,7 +65,15 @@ const Card: React.FC = () => {
               <CountryFlag flag={country.flag} />
               <Link className={styles.links} to={`/home/${country.id}`}>
                 {" "}
-                More Info
+                <span>More Info</span>
+                <span
+                  className={styles.delete}
+                  onClick={(e) => {
+                    hanldeCountryDelete(e, country.id);
+                  }}
+                >
+                  Delete
+                </span>
               </Link>
             </div>
           </div>

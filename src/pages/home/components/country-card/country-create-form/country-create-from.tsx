@@ -10,8 +10,8 @@ const CountryCreateForm: React.FC<CountryCreateFormProps> = ({
 }) => {
   return (
     <form className={styles.details} onSubmit={onCountryCreate}>
-      <input name="name" />
-      <input name="flag" />
+      <input name="name" placeholder="Country Name" />
+      <input name="flag" placeholder="Country Flag Image Source" />
 
       <button type="submit">Add new Country</button>
     </form>
