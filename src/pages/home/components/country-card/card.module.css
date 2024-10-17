@@ -31,7 +31,11 @@
   /* text-decoration: none; */
 }
 
-.delete {
-  color: red;
-  text-decoration: none !important;
+.deleted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: red; /* Light red background for visual distinction */
+  padding: 10px; /* Add some padding */
 }

@@ -7,10 +7,11 @@ type CountryReducerInitialState = {
   population: string;
   id: string;
   vote: number;
+  isDeleted?: boolean;
 }[];
 
 type CountriesReducerAction = {
-  type: "upvote" | "sort" | "create" | "delete";
+  type: "upvote" | "sort" | "create" | "delete" | "undo";
   payload: any;
 };
 
@@ -19,64 +20,73 @@ export const countriesReducer = (
   action: CountriesReducerAction
 ) => {
   if (action.type === "upvote") {
-    const updatedCountriesList = countriesList.map((country) => {
+    return countriesList.map((country) => {
       if (country.id === action.payload.id) {
         return { ...country, vote: country.vote + 1 };
       }
-      return { ...country };
+      return country;
     });
-    // console.log(state);
-    return updatedCountriesList;
   }
 
   if (action.type === "sort") {
-    const copiedcountriesList = [...countriesList];
+    const activeCountries = countriesList.filter(
+      (country) => !country.isDeleted
+    );
+    const deletedCountries = countriesList.filter(
+      (country) => country.isDeleted
+    );
 
-    if (action.payload.sortType === "asc") {
-      const sortedCountriesList = copiedcountriesList.sort((a, b) => {
-        return a.vote - b.vote;
-      });
+    const sortedActiveCountries = activeCountries.sort((a, b) => {
+      return action.payload.sortType === "asc"
+        ? a.vote - b.vote
+        : b.vote - a.vote;
+    });
 
-      return sortedCountriesList;
-    }
-
-    if (action.payload.sortType === "desc") {
-      const sortedCountriesList = copiedcountriesList.sort((a, b) => {
-        return b.vote - a.vote;
-      });
-
-      return sortedCountriesList;
-    }
+    return [...sortedActiveCountries, ...deletedCountries];
   }
 
   if (action.type === "create") {
-    const updatedCountryList = [
-      ...countriesList,
-      {
-        ...action.payload.countryObj,
-
-        vote: "0",
-        id: (Number(countriesList.at(-1)?.id) + 1).toString(),
-      },
-    ];
-    return updatedCountryList;
+    const newCountry = {
+      ...action.payload.countryObj,
+      vote: 0,
+      id: (Number(countriesList.at(-1)?.id) + 1).toString(),
+      isDeleted: false,
+    };
+    return [...countriesList, newCountry];
   }
 
   if (action.type === "delete") {
-    const deletedCountry = countriesList.find(
+    const updatedCountriesList = countriesList.map((country) => {
+      if (country.id === action.payload.id) {
+        return { ...country, isDeleted: true };
+      }
+      return country;
+    });
+
+    const deletedCountry = updatedCountriesList.find(
       (country) => country.id === action.payload.id
     );
-    const filteredCountriesList = countriesList.filter(
+    const filteredCountriesList = updatedCountriesList.filter(
       (country) => country.id !== action.payload.id
     );
 
     if (deletedCountry) {
       return [...filteredCountriesList, deletedCountry];
     }
+  }
 
-    // return country.id !== action.payload.id;
+  if (action.type === "undo") {
+    const restoredCountry = action.payload.country;
+    const updatedCountriesList = countriesList.filter(
+      (country) => country.id !== restoredCountry.id
+    );
 
-    // return filteredCountriesList;
+    const indexToInsert = Number(restoredCountry.id) - 1;
+    updatedCountriesList.splice(indexToInsert, 0, {
+      ...restoredCountry,
+      isDeleted: false,
+    });
+    return updatedCountriesList;
   }
 
   return countriesList;
