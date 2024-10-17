@@ -1,4 +1,4 @@
-import { FormEvent, useReducer, MouseEvent } from "react";
+import { useReducer, MouseEvent, useState } from "react";
 import styles from "./card.module.css";
 import { Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
@@ -10,6 +10,7 @@ import { CountriesList } from "@/pages/home/components/country-card/reducer/stat
 import { countriesReducer } from "@/pages/home/components/country-card/reducer/reducer";
 
 const Card: React.FC = () => {
+  const [formValidationErrorMsg, setformValidationErrorMsg] = useState("");
   const [countriesList, dispatch] = useReducer(countriesReducer, CountriesList);
 
   const handleCountryUpvote = (id: string) => () => {
@@ -20,16 +21,16 @@ const Card: React.FC = () => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
-  const handleCreateCountry = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const countryObj: any = {};
-    const formData = new FormData(e.currentTarget);
-
-    for (const [key, value] of formData) {
-      countryObj[key] = value;
+  const handleCreateCountry = (countryFields: {
+    name: string;
+    flag: string;
+  }) => {
+    if (countryFields.name.length < 2) {
+      setformValidationErrorMsg(
+        "Country name should consists meore than 2 letters!!!"
+      );
     }
-
-    dispatch({ type: "create", payload: { countryObj } });
+    dispatch({ type: "create", payload: { countryFields } });
   };
 
   const handleCountryDelete = (e: MouseEvent, id: string) => {
@@ -47,7 +48,10 @@ const Card: React.FC = () => {
         onSortAsc={() => handleCountriesSortByLikes("asc")}
         onSortDesc={() => handleCountriesSortByLikes("desc")}
       />
-      <CountryCreateForm onCountryCreate={handleCreateCountry} />
+      <CountryCreateForm
+        errorMsg={formValidationErrorMsg}
+        onCountryCreate={handleCreateCountry}
+      />
       <div className={styles.countryCard}>
         {countriesList.map((country) => (
           <div

@@ -47,7 +47,7 @@ export const countriesReducer = (
 
   if (action.type === "create") {
     const newCountry = {
-      ...action.payload.countryObj,
+      ...action.payload.countryFields,
       vote: 0,
       id: (Number(countriesList.at(-1)?.id) + 1).toString(),
       isDeleted: false,
