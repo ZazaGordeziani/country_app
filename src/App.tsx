@@ -1,6 +1,6 @@
 import "@/App.css";
 // import HomeListView from "@/pages/views/list";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense } from "react";
 import { lazy } from "react";
 import PageNotFound from "@/pages/404";
@@ -12,9 +12,10 @@ const LazyAboutView = lazy(() => import("@/pages/about/views/about"));
 const LazyContactView = lazy(() => import("@/pages/contact/views/index"));
 const LazyBookingView = lazy(() => import("@/pages/booking/views/index"));
 const LazyHomeListView = lazy(() => import("@/pages/views/list/index"));
-const LazeHomeDetailedInfo = lazy(
+const LazyHomeDetailedInfo = lazy(
   () => import("@/pages/views/countryDetails/index")
 );
+const LazeLangInfo = lazy(() => import("@/pages/language/views/lang"));
 
 const App: React.FC = () => {
   return (
@@ -22,17 +23,18 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route element={<LazyDefaultLayout />}>
-              <Route path="/" element={<div>landing...</div>} />
-
+            <Route path="/:lang" element={<LazyDefaultLayout />}>
               <Route path="home" element={<LazyHomeListView />}></Route>
 
-              <Route path="home/:id" element={<LazeHomeDetailedInfo />} />
+              <Route path="home/:id" element={<LazyHomeDetailedInfo />} />
               <Route path="booking" element={<LazyBookingView />} />
 
               <Route path="about" element={<LazyAboutView />} />
               <Route path="contact" element={<LazyContactView />} />
+              <Route path="lang" element={<LazeLangInfo />} />
             </Route>
+            <Route path="/" element={<Navigate to="ka/home" />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </Suspense>
