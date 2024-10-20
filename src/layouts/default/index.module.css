@@ -1,9 +1,37 @@
-.headerLink {
+.langLink {
   text-decoration: none;
   color: #0c8599;
 }
 
-.active_headerLink {
+.active_langLink {
   text-decoration: none;
   color: blue;
+}
+
+.lang {
+  border: 1px, blue solid;
+  /* padding: 5px; */
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  width: 100%;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 100; /* Ensure it appears above other elements */
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  background-color: antiquewhite;
+}
+
+.dropdown div {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown div:hover {
+  background-color: #aba4b3;
+  color: rgb(10, 14, 223);
 }
