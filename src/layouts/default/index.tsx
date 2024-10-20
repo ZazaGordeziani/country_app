@@ -20,7 +20,6 @@ const DefaultLayOut = () => {
   };
 
   const handleLanguageChange = (newLang) => {
-    // Here you would navigate to the new language route
     window.location.href = `/${newLang}/home`;
   };
 

@@ -16,7 +16,7 @@ const langData: LanguageData = {
     booking: "შეკვეთა",
     about: "ჩვენს შესახებ",
     contact: "კონტაქტი",
-    chooseLanguage: "ენა",
+    chooseLanguage: "აირჩიე ენა",
   },
   en: {
     title: "Travel Around and Explore New Cultures",
