@@ -1,5 +1,5 @@
-import { useReducer, MouseEvent, useState } from "react";
-import styles from "./card.module.css";
+import React, { useReducer, MouseEvent, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
@@ -8,10 +8,24 @@ import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
 import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
 import { countriesReducer } from "@/pages/home/components/country-card/reducer/reducer";
+import styles from "./card.module.css";
+const text = {
+  moreInfoKa: "დამატებითი ინფორმაცია",
+  moreInfoEn: "More Info",
+  deleteKa: "წაშლა",
+  deleteEn: "Delete",
+  undoKa: "დაბრუნება",
+  undoEn: "Undo",
+};
 
 const Card: React.FC = () => {
-  const [formValidationErrorMsg, setformValidationErrorMsg] = useState("");
+  const { lang } = useParams();
+  // const { currentLang } = useOutletContext<OutletContext>();
+  const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
   const [countriesList, dispatch] = useReducer(countriesReducer, CountriesList);
+
+  console.log(lang);
+  // console.log(currentLang[0]);
 
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
@@ -26,8 +40,8 @@ const Card: React.FC = () => {
     flag: string;
   }) => {
     if (countryFields.name.length < 2) {
-      setformValidationErrorMsg(
-        "Country name should consists meore than 2 letters!!!"
+      setFormValidationErrorMsg(
+        "Country name should consist of more than 2 letters!!!"
       );
     }
     dispatch({ type: "create", payload: { countryFields } });
@@ -60,7 +74,10 @@ const Card: React.FC = () => {
               country.isDeleted ? styles.deleted : styles.countryDetails
             }
           >
-            <CountryName name={country.name} />
+            <CountryName
+              name={lang === "ka" ? country.nameKa : country.nameEn}
+            />{" "}
+            {/* Language-based rendering */}
             <Vote
               onUpVote={handleCountryUpvote(country.id)}
               voteCount={country.vote}
@@ -68,12 +85,12 @@ const Card: React.FC = () => {
             <CountryFlag flag={country.flag} />
             {!country.isDeleted && (
               <Link className={styles.links} to={`/home/${country.id}`}>
-                <span>More Info</span>
+                <span>{lang === "ka" ? text.moreInfoKa : text.moreInfoEn}</span>
                 <span
                   className={styles.delete}
                   onClick={(e) => handleCountryDelete(e, country.id)}
                 >
-                  Delete
+                  {lang === "ka" ? text.deleteKa : text.deleteEn}
                 </span>
               </Link>
             )}
@@ -82,7 +99,7 @@ const Card: React.FC = () => {
                 className={styles.undoButton}
                 onClick={() => handleUndoDelete(country)}
               >
-                Undo
+                {lang === "ka" ? text.undoKa : text.undoEn}
               </button>
             )}
           </div>

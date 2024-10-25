@@ -1,33 +1,37 @@
-// import React;
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  useNavigate,
+  Link,
+  NavLink,
+  useParams,
+  Outlet,
+} from "react-router-dom";
 import Header from "@/components/header";
 import { HeaderTitle } from "@/components/header/headerTitle";
 import { HeaderNav } from "@/components/header/HeaderNav";
 import { HeaderNavItem } from "@/components/header/headerNavItem";
 import { PageContainer } from "@/components/base/page-container";
 import Footer from "@/components/base/footer";
-import { Link, NavLink, useParams } from "react-router-dom";
-import { Outlet } from "react-router-dom";
 import langData from "@/components/header/LangData/langdata";
 import styles from "@/layouts/default/index.module.css";
 
 const DefaultLayOut = () => {
   const { lang } = useParams();
-  const [showLangOptions, setshowLangOptions] = useState(false);
+  const [showLangOptions, setShowLangOptions] = useState(false);
+  const navigate = useNavigate();
 
-  const handleActiveNav = ({ isActive }) => {
-    return isActive ? styles["active_langLink"] : styles["langLink"];
-  };
+  const handleActiveNav = ({ isActive }) =>
+    isActive ? styles["active_langLink"] : styles["langLink"];
 
   const handleLanguageChange = (newLang) => {
-    window.location.href = `/${newLang}/home`;
+    navigate(`/${newLang}/home`);
   };
 
   const currentLang = langData[lang] || langData.en;
 
   return (
     <>
-      <Header>
+      <Header currentLang={currentLang} onLanguageChange={handleLanguageChange}>
         <Link className={styles.headerLink} to="/">
           <HeaderTitle title={currentLang.title} />
         </Link>
@@ -46,8 +50,8 @@ const DefaultLayOut = () => {
           </NavLink>
           <div
             className={styles.lang}
-            onMouseEnter={() => setshowLangOptions(true)}
-            onMouseLeave={() => setshowLangOptions(false)}
+            onMouseEnter={() => setShowLangOptions(true)}
+            onMouseLeave={() => setShowLangOptions(false)}
           >
             <HeaderNavItem text={currentLang.chooseLanguage} />
             {showLangOptions && (
