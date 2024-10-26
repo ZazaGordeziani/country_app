@@ -36,10 +36,16 @@ const Card: React.FC = () => {
   };
 
   const handleCreateCountry = (countryFields: {
-    name: string;
+    nameKa: string;
+    nameEn: string;
     flag: string;
   }) => {
-    if (countryFields.name.length < 2) {
+    if (
+      !countryFields.nameKa ||
+      !countryFields.nameEn ||
+      countryFields.nameEn.length < 2 ||
+      countryFields.nameKa.length < 2
+    ) {
       setFormValidationErrorMsg(
         "Country name should consist of more than 2 letters!!!"
       );

@@ -3,7 +3,11 @@ import styles from "./country-create-form.module.css";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 type CountryCreateFormProps = {
-  onCountryCreate: (countryFields: { name: string; flag: string }) => void;
+  onCountryCreate: (countryFields: {
+    nameKa: string;
+    nameEn: string;
+    flag: string;
+  }) => void;
   errorMsg: string;
 };
 
@@ -104,7 +108,7 @@ const CountryCreateForm: React.FC<CountryCreateFormProps> = ({
       setFieldErrorMsg("Please upload a file.");
       return;
     }
-    onCountryCreate({ name: lang === "en" ? nameEn : nameKa, flag });
+    onCountryCreate({ nameEn, nameKa, flag });
   };
 
   return (
