@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   useNavigate,
   Link,
@@ -20,18 +20,21 @@ const DefaultLayOut = () => {
   const [showLangOptions, setShowLangOptions] = useState(false);
   const navigate = useNavigate();
 
-  const handleActiveNav = ({ isActive }) =>
+  const handleActiveNav = ({ isActive }: { isActive: boolean }) =>
     isActive ? styles["active_langLink"] : styles["langLink"];
 
-  const handleLanguageChange = (newLang) => {
+  const handleLanguageChange = (newLang: string) => {
     navigate(`/${newLang}/home`);
   };
 
-  const currentLang = langData[lang] || langData.en;
+  const currentLang = langData[lang as keyof typeof langData] || langData.en;
 
   return (
     <>
-      <Header currentLang={currentLang} onLanguageChange={handleLanguageChange}>
+      <Header
+        currentLang={currentLang}
+        handleLanguageChange={handleLanguageChange}
+      >
         <Link className={styles.headerLink} to="/">
           <HeaderTitle title={currentLang.title} />
         </Link>

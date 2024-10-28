@@ -58,7 +58,7 @@ const Card: React.FC = () => {
     dispatch({ type: "delete", payload: { id } });
   };
 
-  const handleUndoDelete = (country: any) => {
+  const handleUndoDelete = (country: string | number) => {
     dispatch({ type: "undo", payload: { country } });
   };
 
