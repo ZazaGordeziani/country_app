@@ -1,13 +1,15 @@
 import React, { useReducer, MouseEvent, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
 import Vote from "@/pages/home/components/country-card/vote";
 import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
 import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
-import { countriesReducer } from "@/pages/home/components/country-card/reducer/reducer";
+import {
+  countriesReducer,
+  CountryReducerInitialState,
+} from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
@@ -35,11 +37,9 @@ const Card: React.FC = () => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
-  const handleCreateCountry = (countryFields: {
-    nameKa: string;
-    nameEn: string;
-    flag: string;
-  }) => {
+  const handleCreateCountry = (
+    countryFields: CountryReducerInitialState[0],
+  ) => {
     if (
       !countryFields.nameKa ||
       !countryFields.nameEn ||
@@ -58,7 +58,7 @@ const Card: React.FC = () => {
     dispatch({ type: "delete", payload: { id } });
   };
 
-  const handleUndoDelete = (country: string | number) => {
+  const handleUndoDelete = (country: CountryReducerInitialState[0]) => {
     dispatch({ type: "undo", payload: { country } });
   };
 

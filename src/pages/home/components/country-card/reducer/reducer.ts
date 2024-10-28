@@ -1,8 +1,9 @@
 // import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
 
-type CountryReducerInitialState = {
+export type CountryReducerInitialState = {
   flag: string;
-  name: string;
+  nameKa: string;
+  nameEn: string;
   capital: string;
   population: string;
   id: string;
