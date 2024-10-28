@@ -13,7 +13,7 @@ const LazyContactView = lazy(() => import("@/pages/contact/views/index"));
 const LazyBookingView = lazy(() => import("@/pages/booking/views/index"));
 const LazyHomeListView = lazy(() => import("@/pages/views/list/index"));
 const LazyHomeDetailedInfo = lazy(
-  () => import("@/pages/views/countryDetails/index")
+  () => import("@/pages/views/countryDetails/index"),
 );
 const LazeLangInfo = lazy(() => import("@/pages/language/views/lang"));
 

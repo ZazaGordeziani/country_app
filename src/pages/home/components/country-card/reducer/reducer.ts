@@ -17,7 +17,7 @@ type CountriesReducerAction = {
 
 export const countriesReducer = (
   countriesList: CountryReducerInitialState,
-  action: CountriesReducerAction
+  action: CountriesReducerAction,
 ) => {
   if (action.type === "upvote") {
     return countriesList.map((country) => {
@@ -30,10 +30,10 @@ export const countriesReducer = (
 
   if (action.type === "sort") {
     const activeCountries = countriesList.filter(
-      (country) => !country.isDeleted
+      (country) => !country.isDeleted,
     );
     const deletedCountries = countriesList.filter(
-      (country) => country.isDeleted
+      (country) => country.isDeleted,
     );
 
     const sortedActiveCountries = activeCountries.sort((a, b) => {
@@ -64,10 +64,10 @@ export const countriesReducer = (
     });
 
     const deletedCountry = updatedCountriesList.find(
-      (country) => country.id === action.payload.id
+      (country) => country.id === action.payload.id,
     );
     const filteredCountriesList = updatedCountriesList.filter(
-      (country) => country.id !== action.payload.id
+      (country) => country.id !== action.payload.id,
     );
 
     if (deletedCountry) {
@@ -78,7 +78,7 @@ export const countriesReducer = (
   if (action.type === "undo") {
     const restoredCountry = action.payload.country;
     const updatedCountriesList = countriesList.filter(
-      (country) => country.id !== restoredCountry.id
+      (country) => country.id !== restoredCountry.id,
     );
 
     const indexToInsert = Number(restoredCountry.id) - 1;

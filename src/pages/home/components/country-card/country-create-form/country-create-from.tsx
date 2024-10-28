@@ -51,7 +51,7 @@ const CountryCreateForm: React.FC<CountryCreateFormProps> = ({
     const value = e.target.value;
     if (value.length < 2 || value.length > 50) {
       setFieldErrorMsg(
-        "Name should not consist of less than 2 and more than 50 letters!!!"
+        "Name should not consist of less than 2 and more than 50 letters!!!",
       );
     } else {
       setFieldErrorMsg("");
@@ -62,7 +62,7 @@ const CountryCreateForm: React.FC<CountryCreateFormProps> = ({
     const value = e.target.value;
     if (value.length < 2 || value.length > 50) {
       setFieldErrorMsg(
-        "Name should not consist of less than 2 and more than 50 letters!!!"
+        "Name should not consist of less than 2 and more than 50 letters!!!",
       );
     } else {
       setFieldErrorMsg("");

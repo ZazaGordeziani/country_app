@@ -9,7 +9,9 @@
 }
 
 .lang {
-  border: 1px, blue solid;
+  border:
+    1px,
+    blue solid;
   /* padding: 5px; */
   position: relative;
   display: inline-block;

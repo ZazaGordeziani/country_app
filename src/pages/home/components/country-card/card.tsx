@@ -47,7 +47,7 @@ const Card: React.FC = () => {
       countryFields.nameKa.length < 2
     ) {
       setFormValidationErrorMsg(
-        "Country name should consist of more than 2 letters!!!"
+        "Country name should consist of more than 2 letters!!!",
       );
     }
     dispatch({ type: "create", payload: { countryFields } });
