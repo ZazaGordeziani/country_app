@@ -32,8 +32,8 @@ const DefaultLayOut = () => {
   return (
     <>
       <Header
-        currentLang={currentLang}
-        handleLanguageChange={handleLanguageChange}
+      // currentLang={currentLang}
+      // handleLanguageChange={handleLanguageChange}
       >
         <Link className={styles.headerLink} to="/">
           <HeaderTitle title={currentLang.title} />

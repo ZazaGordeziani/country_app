@@ -1,1 +1,3 @@
-npm test
+yarn prettier
+yarn ts-check
+yarn lint

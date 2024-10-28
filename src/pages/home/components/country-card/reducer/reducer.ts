@@ -10,10 +10,18 @@ type CountryReducerInitialState = {
   isDeleted?: boolean;
 }[];
 
-type CountriesReducerAction = {
-  type: "upvote" | "sort" | "create" | "delete" | "undo";
-  payload: any;
-};
+type CountriesReducerAction =
+  | { type: "upvote"; payload: { id: string } }
+  | { type: "sort"; payload: { sortType: string } }
+  | {
+      type: "create";
+      payload: { countryFields: CountryReducerInitialState[0] };
+    }
+  | { type: "delete"; payload: { id: string } }
+  | { type: "undo"; payload: { country: CountryReducerInitialState[0] } };
+
+// | "sort" | "create" | "delete" | "undo";
+// payload: string;
 
 export const countriesReducer = (
   countriesList: CountryReducerInitialState,
