@@ -16,7 +16,9 @@ type CountriesReducerAction =
   | { type: "sort"; payload: { sortType: string } }
   | {
       type: "create";
-      payload: { countryFields: CountryReducerInitialState[0] };
+      payload: {
+        countryFields: { nameKa: string; nameEn: string; flag: string };
+      };
     }
   | { type: "delete"; payload: { id: string } }
   | { type: "undo"; payload: { country: CountryReducerInitialState[0] } };
@@ -45,7 +47,7 @@ export const countriesReducer = (
       (country) => country.isDeleted,
     );
 
-    const sortedActiveCountries = activeCountries.sort((a, b) => {
+    const sortedActiveCountries = activeCountries.toSorted((a, b) => {
       return action.payload.sortType === "asc"
         ? a.vote - b.vote
         : b.vote - a.vote;
@@ -55,8 +57,10 @@ export const countriesReducer = (
   }
 
   if (action.type === "create") {
-    const newCountry = {
+    const newCountry: CountryReducerInitialState[0] = {
       ...action.payload.countryFields,
+      capital: "",
+      population: "",
       vote: 0,
       id: (Number(countriesList.at(-1)?.id) + 1).toString(),
       isDeleted: false,

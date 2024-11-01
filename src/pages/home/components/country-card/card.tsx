@@ -37,9 +37,11 @@ const Card: React.FC = () => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
-  const handleCreateCountry = (
-    countryFields: CountryReducerInitialState[0],
-  ) => {
+  const handleCreateCountry = (countryFields: {
+    nameKa: string;
+    nameEn: string;
+    flag: string;
+  }) => {
     if (
       !countryFields.nameKa ||
       !countryFields.nameEn ||
@@ -92,12 +94,12 @@ const Card: React.FC = () => {
             {!country.isDeleted && (
               <Link className={styles.links} to={`/home/${country.id}`}>
                 <span>{lang === "ka" ? text.moreInfoKa : text.moreInfoEn}</span>
-                <span
+                <button
                   className={styles.delete}
                   onClick={(e) => handleCountryDelete(e, country.id)}
                 >
                   {lang === "ka" ? text.deleteKa : text.deleteEn}
-                </span>
+                </button>
               </Link>
             )}
             {country.isDeleted && (

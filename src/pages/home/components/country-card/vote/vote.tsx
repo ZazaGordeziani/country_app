@@ -15,9 +15,9 @@ export const Vote: React.FC<
   return (
     <div className={styles.cap}>
       {lang === "ka" ? text.likeKa : text.likeEn}: {voteCount}{" "}
-      <span style={{ color: "blue", cursor: "pointer" }} onClick={onUpVote}>
+      <button style={{ color: "blue", cursor: "pointer" }} onClick={onUpVote}>
         UP
-      </span>
+      </button>
     </div>
   );
 };

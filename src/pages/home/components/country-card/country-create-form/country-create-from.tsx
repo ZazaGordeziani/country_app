@@ -7,6 +7,10 @@ type CountryCreateFormProps = {
     nameKa: string;
     nameEn: string;
     flag: string;
+    // capital: string;
+    // id: string;
+    // vote: number;
+    // population: string;
   }) => void;
   errorMsg: string;
 };
@@ -34,6 +38,12 @@ const CountryCreateForm: React.FC<CountryCreateFormProps> = ({
   const [nameEn, setNameEn] = useState("");
   const [flag, setFlag] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  // const [capital, setCapital] = useState("");
+  // const [population, setPopulation] = useState("");
+  // const [id, setId] = useState("");
+  // const [vote, setVote] = useState(0);
+  // const [isDeleted, setIsDeleted] = useState(false);
   // const [fileName, setFileName] = useState<string>(text.noFileChosenEn);
 
   // useEffect(() => {
