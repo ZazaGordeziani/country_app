@@ -62,6 +62,24 @@ const Validation: FC<ValidationProps> = ({ count }) => {
       e.preventDefault();
     }
   };
+
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("Text"); // retrieve copied numbers
+    const digits = pastedData.split("").filter((digit) => /^\d$/.test(digit)); // numbers are splitted in order to paste them separately in the inputs
+
+    const newInputs = [...inputs]; //shallow copy of inputs is created, so the original array will not be changed.
+
+    for (let i = 0; i < digits.length && index + i < count; i++) {
+      newInputs[index + i].value = digits[i];
+    } //for loop helps to assign the values accordingly to the inputs
+
+    setInputs(newInputs); // new values added to setInputs and then state updates
+  };
+
   return (
     <div className={styles.form}>
       {inputs.map((input, index) => (
@@ -72,6 +90,7 @@ const Validation: FC<ValidationProps> = ({ count }) => {
           key={input.id}
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
+          onPaste={(e) => handlePaste(e, index)}
           className={styles.boxes}
           value={input.value}
         />
