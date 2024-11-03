@@ -8,6 +8,8 @@ import PageNotFound from "@/pages/404";
 // import CountryDetailedInfo from "@/pages/views/countryDetails";
 
 const LazyDefaultLayout = lazy(() => import("@/layouts/default"));
+const LazyValidationView = lazy(() => import("@/pages/validation/views/index"));
+
 const LazyAboutView = lazy(() => import("@/pages/about/views/about"));
 const LazyContactView = lazy(() => import("@/pages/contact/views/index"));
 const LazyBookingView = lazy(() => import("@/pages/booking/views/index"));
@@ -31,6 +33,7 @@ const App: React.FC = () => {
 
               <Route path="about" element={<LazyAboutView />} />
               <Route path="contact" element={<LazyContactView />} />
+              <Route path="validation" element={<LazyValidationView />} />
               <Route path="lang" element={<LazeLangInfo />} />
             </Route>
             <Route path="/" element={<Navigate to="ka/home" />} />

@@ -5,6 +5,7 @@ interface LanguageData {
     booking: string;
     about: string;
     contact: string;
+    validation: string;
     chooseLanguage: string;
   };
 }
@@ -16,6 +17,7 @@ const langData: LanguageData = {
     booking: "შეკვეთა",
     about: "ჩვენს შესახებ",
     contact: "კონტაქტი",
+    validation: "ანგარიშის დადასტურება",
     chooseLanguage: "აირჩიე ენა",
   },
   en: {
@@ -24,6 +26,7 @@ const langData: LanguageData = {
     booking: "Booking",
     about: "About us",
     contact: "Contact us",
+    validation: "Account Validation",
     chooseLanguage: "Choose Language",
   },
 };

@@ -1,0 +1,15 @@
+.form {
+  min-height: 100vh;
+  padding: 100px;
+  display: flex;
+  gap: 25px;
+}
+
+.boxes {
+  width: 100px;
+  height: 70px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  border-radius: 10px;
+  text-align: center;
+}

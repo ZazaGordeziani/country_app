@@ -51,6 +51,9 @@ const DefaultLayOut = () => {
           <NavLink className={handleActiveNav} to="contact">
             <HeaderNavItem text={currentLang.contact} />
           </NavLink>
+          <NavLink className={handleActiveNav} to="validation">
+            <HeaderNavItem text={currentLang.validation} />
+          </NavLink>
           <div
             className={styles.lang}
             onMouseEnter={() => setShowLangOptions(true)}
