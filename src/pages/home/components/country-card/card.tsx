@@ -23,34 +23,44 @@ const text = {
   undoEn: "Undo",
 };
 
-interface Country {
-  capital: string;
-  population: string;
-  id: string;
-  nameKa: string;
-  nameEn: string;
-  flag: string;
-  vote: number;
-  isDeleted: boolean;
-}
+// interface Country {
+//   capital: string;
+//   population: string;
+//   id: string;
+//   nameKa: string;
+//   nameEn: string;
+//   flag: string;
+//   vote: number;
+//   isDeleted: boolean;
+// }
 
 const Card: React.FC = () => {
   const { lang } = useParams();
   const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
-  const [countries, setCountries] = useState<Country[]>([]);
+  // const [countries, setCountries] = useState<CountryReducerInitialState[]>([]);
   const [countriesList, dispatch] = useReducer(countriesReducer, []);
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/countries") // Fetch countries  inside useEffect
       .then((response) => {
-        setCountries(response.data); // get the countries from the response
+        const recievedCountries = response.data; //this variables consists info thake from server.
+        console.log(recievedCountries);
+
+        dispatch({
+          type: "set_Data",
+          payload: { countries: recievedCountries },
+        });
       })
       .catch((error) => {
         console.error("Error fetching countries:", error); //in case of error
       });
   }, []);
-  console.log(countries);
+  useEffect(() => {
+    console.log("Updated countriesList:", countriesList);
+  }, [countriesList]);
+
+  // console.log(countriesList);
 
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
@@ -99,7 +109,7 @@ const Card: React.FC = () => {
         onCountryCreate={handleCreateCountry}
       />
       <div className={styles.countryCard}>
-        {countries.map((country) => (
+        {countriesList.map((country) => (
           <div
             key={country.id}
             className={

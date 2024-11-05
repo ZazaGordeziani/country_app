@@ -21,7 +21,8 @@ type CountriesReducerAction =
       };
     }
   | { type: "delete"; payload: { id: string } }
-  | { type: "undo"; payload: { country: CountryReducerInitialState[0] } };
+  | { type: "undo"; payload: { country: CountryReducerInitialState[0] } }
+  | { type: "set_Data"; payload: { countries: CountryReducerInitialState } };
 
 // | "sort" | "create" | "delete" | "undo";
 // payload: string;
