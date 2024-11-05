@@ -5,15 +5,12 @@ import CountryFlag from "@/pages/home/components/country-card/country-flag/count
 import Vote from "@/pages/home/components/country-card/vote";
 import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
-// import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
 import {
   countriesReducer,
   CountryReducerInitialState,
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
 import axios from "axios";
-// import { count } from "console";
-// import AddCountries from "@/pages/home/components/country-card/reducer/database";
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
   moreInfoEn: "More Info",
@@ -21,55 +18,48 @@ const text = {
   deleteEn: "Delete",
   undoKa: "დაბრუნება",
   undoEn: "Undo",
+  editKa: "რედაქტირება",
+  editEn: "Edit",
 };
-
-// interface Country {
-//   capital: string;
-//   population: string;
-//   id: string;
-//   nameKa: string;
-//   nameEn: string;
-//   flag: string;
-//   vote: number;
-//   isDeleted: boolean;
-// }
 
 const Card: React.FC = () => {
   const { lang } = useParams();
   const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
-  // const [countries, setCountries] = useState<CountryReducerInitialState[]>([]);
   const [countriesList, dispatch] = useReducer(countriesReducer, []);
+  const [editCountry, setEditCountry] = useState<
+    CountryReducerInitialState[0] | null
+  >(null); // State to manage the edit form
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/countries") // Fetch countries  inside useEffect
+      .get("http://localhost:3000/countries") // Fetch countries inside useEffect
       .then((response) => {
-        const recievedCountries = response.data; //this variables consists info thake from server.
-        console.log(recievedCountries);
-
+        const recievedCountries = response.data;
         dispatch({
           type: "set_Data",
-          payload: { countries: recievedCountries },
+          payload: recievedCountries, // Pass the countries array directly
         });
       })
       .catch((error) => {
-        console.error("Error fetching countries:", error); //in case of error
+        console.error("Error fetching countries:", error); // in case of error
       });
   }, []);
+
   useEffect(() => {
     console.log("Updated countriesList:", countriesList);
   }, [countriesList]);
 
-  // console.log(countriesList);
-
+  // Handle Upvote
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
   };
 
+  // Handle Sorting
   const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
+  // Handle Create Country
   const handleCreateCountry = (countryFields: {
     nameKa: string;
     nameEn: string;
@@ -88,18 +78,39 @@ const Card: React.FC = () => {
     dispatch({ type: "create", payload: { countryFields } });
   };
 
+  // Handle Delete
   const handleCountryDelete = (e: MouseEvent, id: string) => {
     e.preventDefault();
-    dispatch({ type: "delete", payload: { id } });
+    axios
+      .delete(`http://localhost:3000/countries/${id}`)
+      .then(() => {
+        dispatch({ type: "delete", payload: { id } });
+      })
+      .catch((error) => {
+        console.error("Error deleting country:", error);
+      });
   };
 
+  // Handle Undo Delete
   const handleUndoDelete = (country: CountryReducerInitialState[0]) => {
     dispatch({ type: "undo", payload: { country } });
   };
 
+  // Handle Edit
+  const handleEditCountry = (country: CountryReducerInitialState[0]) => {
+    setEditCountry(country); // Set the selected country to be edited
+  };
+
+  // Handle Update Country after Edit Form submission
+  const handleUpdateCountry = (
+    updatedCountry: CountryReducerInitialState[0],
+  ) => {
+    dispatch({ type: "update", payload: { country: updatedCountry } });
+    setEditCountry(null); // Close the edit form after updating
+  };
+
   return (
     <>
-      {/* <AddCountries /> */}
       <Sorting
         onSortAsc={() => handleCountriesSortByLikes("asc")}
         onSortDesc={() => handleCountriesSortByLikes("desc")}
@@ -118,23 +129,35 @@ const Card: React.FC = () => {
           >
             <CountryName
               name={lang === "ka" ? country.nameKa : country.nameEn}
-            />{" "}
-            {/* Language-based rendering */}
+            />
             <Vote
               onUpVote={handleCountryUpvote(country.id)}
               voteCount={country.vote}
+              isDeleted={country.isDeleted}
             />
             <CountryFlag flag={country.flag} />
             {!country.isDeleted && (
-              <Link className={styles.links} to={`/home/${country.id}`}>
-                <span>{lang === "ka" ? text.moreInfoKa : text.moreInfoEn}</span>
-                <button
-                  className={styles.delete}
-                  onClick={(e) => handleCountryDelete(e, country.id)}
-                >
-                  {lang === "ka" ? text.deleteKa : text.deleteEn}
-                </button>
-              </Link>
+              <div>
+                <Link className={styles.links} to={`/home/${country.id}`}>
+                  <span>
+                    {lang === "ka" ? text.moreInfoKa : text.moreInfoEn}
+                  </span>
+                </Link>
+                <div className={styles.deleteEditButtons}>
+                  <button
+                    className={styles.delete}
+                    onClick={(e) => handleCountryDelete(e, country.id)}
+                  >
+                    {lang === "ka" ? text.deleteKa : text.deleteEn}
+                  </button>
+                  <button
+                    className={styles.edit}
+                    onClick={() => handleEditCountry(country)}
+                  >
+                    {lang === "ka" ? text.editKa : text.editEn}
+                  </button>
+                </div>
+              </div>
             )}
             {country.isDeleted && (
               <button
@@ -147,6 +170,72 @@ const Card: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {editCountry && (
+        <div className={styles.editSection}>
+          <h3>{lang === "ka" ? "რედაქტირება" : "Edit Country"}</h3>
+          <form
+            className={styles.editWindow}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdateCountry(editCountry);
+            }}
+          >
+            <input
+              type="text"
+              value={editCountry.nameKa}
+              onChange={(e) =>
+                setEditCountry({ ...editCountry, nameKa: e.target.value })
+              }
+              placeholder="Georgian Name"
+            />
+            <input
+              type="text"
+              value={editCountry.nameEn}
+              onChange={(e) =>
+                setEditCountry({ ...editCountry, nameEn: e.target.value })
+              }
+              placeholder="English Name"
+            />
+            <input
+              type="text"
+              value={editCountry.flag}
+              onChange={(e) =>
+                setEditCountry({ ...editCountry, flag: e.target.value })
+              }
+              placeholder="Flag URL"
+            />
+            <input
+              type="text"
+              value={editCountry.capital}
+              onChange={(e) =>
+                setEditCountry({ ...editCountry, capital: e.target.value })
+              }
+              placeholder="Capital"
+            />
+            <input
+              type="text"
+              value={editCountry.population}
+              onChange={(e) =>
+                setEditCountry({ ...editCountry, population: e.target.value })
+              }
+              placeholder="Population"
+            />
+            <div className={styles.editButtons}>
+              <button className={styles.button} type="submit">
+                {lang === "ka" ? "შენახვა" : "Save"}
+              </button>
+              <button
+                className={styles.button}
+                type="button"
+                onClick={() => setEditCountry(null)}
+              >
+                {lang === "ka" ? "დახურვა" : "Close"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 };

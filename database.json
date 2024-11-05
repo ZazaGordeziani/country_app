@@ -10,7 +10,6 @@
       "id": "1",
       "vote": 0
     },
-
     {
       "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/640px-Flag_of_Mexico.svg.png",
       "nameEn": "Mexico",
@@ -21,7 +20,6 @@
       "id": "2",
       "vote": 0
     },
-
     {
       "flag": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg",
       "nameEn": "Ecuador ",
@@ -30,9 +28,9 @@
       "capitalKa": "კიტო",
       "population": "18 179 273",
       "id": "3",
-      "vote": 0
+      "vote": 0,
+      "isDeleted": false
     },
-
     {
       "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/1200px-Flag_of_Jamaica.svg.png",
       "nameEn": "Jamaica",

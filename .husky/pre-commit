@@ -1,0 +1,3 @@
+yarn ts-check
+yarn prepare
+yarn prettier
