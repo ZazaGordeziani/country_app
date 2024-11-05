@@ -2,7 +2,7 @@ import Hero from "@/pages/home/components/hero";
 import Card from "@/pages/home/components/country-card/card";
 import HeroTitle from "@/pages/home/components/hero/hero-title/title";
 import HeroSubtitle from "@/pages/home/components/hero/hero-subtitle";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 // import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 // import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
@@ -17,9 +17,9 @@ import { useParams } from "react-router-dom";
 // };
 
 const HomeListView = () => {
-  const { lang } = useParams();
+  // const { lang } = useParams();
 
-  console.log(lang);
+  // console.log(lang);
 
   return (
     <>

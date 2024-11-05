@@ -68,10 +68,13 @@ const Validation: FC<ValidationProps> = ({ count }) => {
     index: number,
   ) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData("Text"); // retrieve copied numbers
+    const pastedData = e.clipboardData.getData("Text");
+    // console.log(pastedData); // retrieve copied numbers
     const digits = pastedData.split("").filter((digit) => /^\d$/.test(digit)); // numbers are splitted in order to paste them separately in the inputs
+    // console.log(digits);
 
     const newInputs = [...inputs]; //shallow copy of inputs is created, so the original array will not be changed.
+    console.log(newInputs);
 
     for (let i = 0; i < digits.length && index + i < count; i++) {
       newInputs[index + i].value = digits[i];

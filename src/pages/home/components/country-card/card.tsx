@@ -1,16 +1,19 @@
-import React, { useReducer, MouseEvent, useState } from "react";
+import React, { useReducer, MouseEvent, useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
 import Vote from "@/pages/home/components/country-card/vote";
 import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
-import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
+// import { CountriesList } from "@/pages/home/components/country-card/reducer/state";
 import {
   countriesReducer,
   CountryReducerInitialState,
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
+import axios from "axios";
+// import { count } from "console";
+// import AddCountries from "@/pages/home/components/country-card/reducer/database";
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
   moreInfoEn: "More Info",
@@ -20,14 +23,34 @@ const text = {
   undoEn: "Undo",
 };
 
+interface Country {
+  capital: string;
+  population: string;
+  id: string;
+  nameKa: string;
+  nameEn: string;
+  flag: string;
+  vote: number;
+  isDeleted: boolean;
+}
+
 const Card: React.FC = () => {
   const { lang } = useParams();
-  // const { currentLang } = useOutletContext<OutletContext>();
   const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
-  const [countriesList, dispatch] = useReducer(countriesReducer, CountriesList);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [countriesList, dispatch] = useReducer(countriesReducer, []);
 
-  console.log(lang);
-  // console.log(currentLang[0]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/countries") // Fetch countries  inside useEffect
+      .then((response) => {
+        setCountries(response.data); // get the countries from the response
+      })
+      .catch((error) => {
+        console.error("Error fetching countries:", error); //in case of error
+      });
+  }, []);
+  console.log(countries);
 
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
@@ -66,6 +89,7 @@ const Card: React.FC = () => {
 
   return (
     <>
+      {/* <AddCountries /> */}
       <Sorting
         onSortAsc={() => handleCountriesSortByLikes("asc")}
         onSortDesc={() => handleCountriesSortByLikes("desc")}
@@ -75,7 +99,7 @@ const Card: React.FC = () => {
         onCountryCreate={handleCreateCountry}
       />
       <div className={styles.countryCard}>
-        {countriesList.map((country) => (
+        {countries.map((country) => (
           <div
             key={country.id}
             className={

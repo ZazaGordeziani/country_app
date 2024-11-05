@@ -21,7 +21,7 @@ const LazeLangInfo = lazy(() => import("@/pages/language/views/lang"));
 
 const App: React.FC = () => {
   return (
-    <>
+    
       <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
@@ -42,7 +42,7 @@ const App: React.FC = () => {
           </Routes>
         </Suspense>
       </BrowserRouter>
-    </>
+    
   );
 };
 
