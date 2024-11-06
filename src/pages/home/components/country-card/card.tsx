@@ -49,6 +49,13 @@ const Card: React.FC = () => {
     console.log("Updated countriesList:", countriesList);
   }, [countriesList]);
 
+  useEffect(() => {
+    axios.get("https://restcountries.com/v3.1/all").then((response) => {
+      const countr = response.data;
+      console.log(countr);
+    });
+  });
+
   // Handle Upvote
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
