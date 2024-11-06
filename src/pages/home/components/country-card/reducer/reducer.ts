@@ -87,7 +87,8 @@ export const countriesReducer = (
     );
 
     if (deletedCountry) {
-      return [...filteredCountriesList, deletedCountry];
+      return [...filteredCountriesList];
+      // deletedCountry   if displaying the deleted country  is required, add deletedCountry in an array.
     }
   }
 

@@ -49,12 +49,12 @@ const Card: React.FC = () => {
     console.log("Updated countriesList:", countriesList);
   }, [countriesList]);
 
-  useEffect(() => {
-    axios.get("https://restcountries.com/v3.1/all").then((response) => {
-      const countr = response.data;
-      console.log(countr);
-    });
-  });
+  // useEffect(() => {
+  //   axios.get("https://restcountries.com/v3.1/all").then((response) => {
+  //     const countr = response.data;
+  //     console.log(countr);
+  //   });
+  // });
 
   // Handle Upvote
   const handleCountryUpvote = (id: string) => () => {
@@ -99,9 +99,9 @@ const Card: React.FC = () => {
   };
 
   // Handle Undo Delete
-  const handleUndoDelete = (country: CountryReducerInitialState[0]) => {
-    dispatch({ type: "undo", payload: { country } });
-  };
+  // const handleUndoDelete = (country: CountryReducerInitialState[0]) => {
+  //   dispatch({ type: "undo", payload: { country } });
+  // };
 
   // Handle Edit
   const handleEditCountry = (country: CountryReducerInitialState[0]) => {
@@ -145,7 +145,10 @@ const Card: React.FC = () => {
             <CountryFlag flag={country.flag} />
             {!country.isDeleted && (
               <div>
-                <Link className={styles.links} to={`/home/${country.id}`}>
+                <Link
+                  className={styles.links}
+                  to={`/${lang}/home/${country.id}`}
+                >
                   <span>
                     {lang === "ka" ? text.moreInfoKa : text.moreInfoEn}
                   </span>
@@ -166,14 +169,14 @@ const Card: React.FC = () => {
                 </div>
               </div>
             )}
-            {country.isDeleted && (
-              <button
-                className={styles.undoButton}
-                onClick={() => handleUndoDelete(country)}
-              >
-                {lang === "ka" ? text.undoKa : text.undoEn}
-              </button>
-            )}
+            {/* {country.isDeleted && ( */}
+            {/* <button */}
+            {/* className={styles.undoButton} */}
+            {/* // onClick={() => handleUndoDelete(country)} */}
+            {/* > */}
+            {/* {lang === "ka" ? text.undoKa : text.undoEn} */}
+            {/* </button> */}
+            {/* )} */}
           </div>
         ))}
       </div>

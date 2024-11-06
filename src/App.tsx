@@ -21,28 +21,28 @@ const LazeLangInfo = lazy(() => import("@/pages/language/views/lang"));
 
 const App: React.FC = () => {
   return (
-    
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/:lang" element={<LazyDefaultLayout />}>
-              <Route path="home" element={<LazyHomeListView />}></Route>
+    <BrowserRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/:lang" element={<LazyDefaultLayout />}>
+            <Route path="home" element={<LazyHomeListView />}></Route>
 
-              <Route path="home/:id" element={<LazyHomeDetailedInfo />} />
-              <Route path="booking" element={<LazyBookingView />} />
+            <Route path="home/:id" element={<LazyHomeDetailedInfo />} />
 
-              <Route path="about" element={<LazyAboutView />} />
-              <Route path="contact" element={<LazyContactView />} />
-              <Route path="validation" element={<LazyValidationView />} />
-              <Route path="lang" element={<LazeLangInfo />} />
-            </Route>
-            <Route path="/" element={<Navigate to="ka/home" />} />
+            {/* <Route path="home/:id" element={<LazyHomeDetailedInfo />} /> */}
+            <Route path="booking" element={<LazyBookingView />} />
 
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    
+            <Route path="about" element={<LazyAboutView />} />
+            <Route path="contact" element={<LazyContactView />} />
+            <Route path="validation" element={<LazyValidationView />} />
+            <Route path="lang" element={<LazeLangInfo />} />
+          </Route>
+          <Route path="/" element={<Navigate to="ka/home" />} />
+
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 };
 
