@@ -29,7 +29,6 @@ const App: React.FC = () => {
 
             <Route path="home/:id" element={<LazyHomeDetailedInfo />} />
 
-            {/* <Route path="home/:id" element={<LazyHomeDetailedInfo />} /> */}
             <Route path="booking" element={<LazyBookingView />} />
 
             <Route path="about" element={<LazyAboutView />} />

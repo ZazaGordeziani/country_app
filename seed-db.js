@@ -1,12 +1,11 @@
 import axios from "axios";
+import { promises as fs } from "fs";
 
 const API_URL = "https://restcountries.com/v3.1/all"; // URL to fetch country data
-const SERVER_URL = "http://localhost:3000/countries"; // Server URL to save data
+const FILE_PATH = "./database.json"; // Local server to save data
 
-// Function to fetch and post data
 const seedCountries = async () => {
   try {
-    // Fetch data from the API
     const response = await axios.get(API_URL);
     console.log("Fetched country data successfully!");
 
@@ -23,18 +22,17 @@ const seedCountries = async () => {
       vote: 0,
     }));
 
-    //add data to server
-    const postResponse = await axios.post(SERVER_URL, {
-      countries: formattedCountries,
-    });
+    // Delete the existing data from the file
+    await fs.truncate(FILE_PATH, 0); //file path content length will get 0
 
-    if (postResponse.status === 201) {
-      console.log("Database seeded successfully!");
-    } else {
-      console.error("Failed to seed database on server.");
-    }
+    // add  new data
+    await fs.writeFile(
+      FILE_PATH,
+      JSON.stringify({ countries: formattedCountries }, null, 2),
+    );
+    console.log("Database seeded successfully!");
   } catch (err) {
-    console.error("Error while retrieveing data:", err);
+    console.error("Error while retrieving or saving data:", err);
   }
 };
 
