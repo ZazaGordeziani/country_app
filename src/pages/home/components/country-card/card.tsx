@@ -11,6 +11,7 @@ import {
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
 import axios from "axios";
+
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
   moreInfoEn: "More Info",
@@ -30,6 +31,7 @@ const Card: React.FC = () => {
     CountryReducerInitialState[0] | null
   >(null); // State to manage the edit form
 
+  // Fetch countries from the server on component mount
   useEffect(() => {
     axios
       .get("http://localhost:3000/countries") // Fetch countries inside useEffect
@@ -41,20 +43,13 @@ const Card: React.FC = () => {
         });
       })
       .catch((error) => {
-        console.error("Error fetching countries:", error); // in case of error
+        console.error("Error fetching countries:", error); // In case of error
       });
   }, []);
 
   useEffect(() => {
     console.log("Updated countriesList:", countriesList);
   }, [countriesList]);
-
-  // useEffect(() => {
-  //   axios.get("https://restcountries.com/v3.1/all").then((response) => {
-  //     const countr = response.data;
-  //     console.log(countr);
-  //   });
-  // });
 
   // Handle Upvote
   const handleCountryUpvote = (id: string) => () => {
@@ -98,22 +93,30 @@ const Card: React.FC = () => {
       });
   };
 
-  // Handle Undo Delete
-  // const handleUndoDelete = (country: CountryReducerInitialState[0]) => {
-  //   dispatch({ type: "undo", payload: { country } });
-  // };
-
   // Handle Edit
   const handleEditCountry = (country: CountryReducerInitialState[0]) => {
     setEditCountry(country); // Set the selected country to be edited
   };
 
   // Handle Update Country after Edit Form submission
-  const handleUpdateCountry = (
+  const handleUpdateCountry = async (
     updatedCountry: CountryReducerInitialState[0],
   ) => {
-    dispatch({ type: "update", payload: { country: updatedCountry } });
-    setEditCountry(null); // Close the edit form after updating
+    try {
+      // Send PUT request to update the country data on the server
+      const response = await axios.put(
+        `http://localhost:3000/countries/${updatedCountry.id}`,
+        updatedCountry, // Send the updated country data to the server
+      );
+
+      // After successful update, dispatch the action to update the local state
+      if (response.status === 200) {
+        dispatch({ type: "update", payload: { country: updatedCountry } });
+        setEditCountry(null); // Close the edit form after updating
+      }
+    } catch (error) {
+      console.error("Error updating country:", error);
+    }
   };
 
   return (
@@ -169,14 +172,6 @@ const Card: React.FC = () => {
                 </div>
               </div>
             )}
-            {/* {country.isDeleted && ( */}
-            {/* <button */}
-            {/* className={styles.undoButton} */}
-            {/* // onClick={() => handleUndoDelete(country)} */}
-            {/* > */}
-            {/* {lang === "ka" ? text.undoKa : text.undoEn} */}
-            {/* </button> */}
-            {/* )} */}
           </div>
         ))}
       </div>
@@ -188,7 +183,7 @@ const Card: React.FC = () => {
             className={styles.editWindow}
             onSubmit={(e) => {
               e.preventDefault();
-              handleUpdateCountry(editCountry);
+              handleUpdateCountry(editCountry); // Handle update submission
             }}
           >
             <input
@@ -238,7 +233,7 @@ const Card: React.FC = () => {
               <button
                 className={styles.button}
                 type="button"
-                onClick={() => setEditCountry(null)}
+                onClick={() => setEditCountry(null)} // Close the edit form
               >
                 {lang === "ka" ? "დახურვა" : "Close"}
               </button>
