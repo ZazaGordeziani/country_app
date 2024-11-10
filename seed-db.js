@@ -23,7 +23,7 @@ const seedCountries = async () => {
     }));
 
     // Delete the existing data from the file
-    await fs.truncate(FILE_PATH, 0); //file path content length will get 0
+    // await fs.truncate(FILE_PATH, 0); //file path content length will get 0
 
     // add  new data
     await fs.writeFile(
