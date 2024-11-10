@@ -1,4 +1,4 @@
-import React, { useReducer, MouseEvent, useState } from "react";
+import React, { useReducer, MouseEvent, useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
@@ -46,9 +46,12 @@ const Card: React.FC = () => {
     queryFn: getCountries,
     retry: 0,
     refetchOnWindowFocus: false,
-    onSuccess: (countries) => {
-      dispatch({ type: "set_Data", payload: countries });
-    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: "set_Data", payload: data });
+    }
   });
 
   console.log(data);
@@ -59,7 +62,7 @@ const Card: React.FC = () => {
   const { mutate: updateCountryMutate } = useMutation({
     mutationFn: deleteCountry,
     onSuccess: () => {
-      queryClient.invalidateQueries(["countries-list"]);
+      queryClient.invalidateQueries({ queryKey: ["countries-list"] });
     },
     onError: (error) => {
       console.error("Error deleting country:", error);
@@ -95,7 +98,7 @@ const Card: React.FC = () => {
   const { mutate: createCountryMutate } = useMutation({
     mutationFn: createCountry, // Assume createCountry is your POST function
     onSuccess: () => {
-      queryClient.invalidateQueries(["countries-list"]); // Invalidate and refetch countries list
+      queryClient.invalidateQueries({ queryKey: ["countries-list"] }); // Invalidate and refetch countries list
     },
     onError: (error) => {
       console.error("Error creating country:", error);
