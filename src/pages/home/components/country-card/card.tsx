@@ -1,4 +1,4 @@
-import React, { useReducer, MouseEvent, useState, useEffect } from "react";
+import React, { useReducer, MouseEvent, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
@@ -10,7 +10,8 @@ import {
   CountryReducerInitialState,
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
-import axios from "axios";
+import { deleteCountry, getCountries, updateCountry } from "@/api/countries";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
@@ -29,39 +30,41 @@ const Card: React.FC = () => {
   const [countriesList, dispatch] = useReducer(countriesReducer, []);
   const [editCountry, setEditCountry] = useState<
     CountryReducerInitialState[0] | null
-  >(null); // State to manage the edit form
+  >(null);
 
-  // Fetch countries from the server on component mount
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/countries") // Fetch countries inside useEffect
-      .then((response) => {
-        const recievedCountries = response.data;
-        dispatch({
-          type: "set_Data",
-          payload: recievedCountries, // Pass the countries array directly
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching countries:", error); // In case of error
-      });
-  }, []);
+  const { data, isLoading, isError } = useQuery<CountryReducerInitialState>({
+    queryKey: ["countries-list"],
+    queryFn: getCountries,
+    retry: 0,
+    refetchOnWindowFocus: false,
+    onSuccess: (countries) => {
+      dispatch({ type: "set_Data", payload: countries });
+    },
+  });
 
-  useEffect(() => {
-    console.log("Updated countriesList:", countriesList);
-  }, [countriesList]);
+  console.log(data);
+  // console.log(isLoading);
+  // console.log(isError);
 
-  // Handle Upvote
+  const queryClient = useQueryClient();
+  const { mutate: updateCountryMutate } = useMutation({
+    mutationFn: deleteCountry,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["countries-list"]);
+    },
+    onError: (error) => {
+      console.error("Error deleting country:", error);
+    },
+  });
+
   const handleCountryUpvote = (id: string) => () => {
     dispatch({ type: "upvote", payload: { id } });
   };
 
-  // Handle Sorting
   const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
-  // Handle Create Country
   const handleCreateCountry = (countryFields: {
     nameKa: string;
     nameEn: string;
@@ -80,43 +83,32 @@ const Card: React.FC = () => {
     dispatch({ type: "create", payload: { countryFields } });
   };
 
-  // Handle Delete
   const handleCountryDelete = (e: MouseEvent, id: string) => {
     e.preventDefault();
-    axios
-      .delete(`http://localhost:3000/countries/${id}`)
-      .then(() => {
-        dispatch({ type: "delete", payload: { id } });
-      })
-      .catch((error) => {
-        console.error("Error deleting country:", error);
-      });
+    updateCountryMutate({ id });
+    dispatch({ type: "delete", payload: { id } });
   };
 
-  // Handle Edit
   const handleEditCountry = (country: CountryReducerInitialState[0]) => {
-    setEditCountry(country); // Set the selected country to be edited
+    setEditCountry(country);
   };
 
-  // Handle Update Country after Edit Form submission
+  const { mutate: updateCountryMutation } = useMutation({
+    mutationFn: updateCountry,
+    onSuccess: () => {
+      console.log("Country updated successfully!");
+    },
+    onError: (error) => {
+      console.error("Error updating country:", error);
+    },
+  });
+
   const handleUpdateCountry = async (
     updatedCountry: CountryReducerInitialState[0],
   ) => {
-    try {
-      // Send PUT request to update the country data on the server
-      const response = await axios.put(
-        `http://localhost:3000/countries/${updatedCountry.id}`,
-        updatedCountry, // Send the updated country data to the server
-      );
-
-      // After successful update, dispatch the action to update the local state
-      if (response.status === 200) {
-        dispatch({ type: "update", payload: { country: updatedCountry } });
-        setEditCountry(null); // Close the edit form after updating
-      }
-    } catch (error) {
-      console.error("Error updating country:", error);
-    }
+    updateCountryMutation({ id: updatedCountry.id, payload: updatedCountry });
+    dispatch({ type: "update", payload: { country: updatedCountry } });
+    setEditCountry(null);
   };
 
   return (
@@ -130,6 +122,8 @@ const Card: React.FC = () => {
         onCountryCreate={handleCreateCountry}
       />
       <div className={styles.countryCard}>
+        {isLoading ? "loading......" : null}
+        {isError ? "Error" : null}
         {countriesList.map((country) => (
           <div
             key={country.id}
@@ -172,75 +166,81 @@ const Card: React.FC = () => {
                 </div>
               </div>
             )}
+            {/* edit window is displayed after country card on which the edit is clicked */}
+            {editCountry && editCountry.id === country.id && (
+              <div className={styles.editSection}>
+                <h3>{lang === "ka" ? "რედაქტირება" : "Edit Country"}</h3>
+                <form
+                  className={styles.editWindow}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUpdateCountry(editCountry);
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={editCountry.nameKa}
+                    onChange={(e) =>
+                      setEditCountry({ ...editCountry, nameKa: e.target.value })
+                    }
+                    placeholder="Georgian Name"
+                  />
+                  <input
+                    type="text"
+                    value={editCountry.nameEn}
+                    onChange={(e) =>
+                      setEditCountry({ ...editCountry, nameEn: e.target.value })
+                    }
+                    placeholder="English Name"
+                  />
+                  <input
+                    type="text"
+                    value={editCountry.flag}
+                    onChange={(e) =>
+                      setEditCountry({ ...editCountry, flag: e.target.value })
+                    }
+                    placeholder="Flag URL"
+                  />
+                  <input
+                    type="text"
+                    value={editCountry.capital}
+                    onChange={(e) =>
+                      setEditCountry({
+                        ...editCountry,
+                        capital: e.target.value,
+                      })
+                    }
+                    placeholder="Capital"
+                  />
+                  <input
+                    type="text"
+                    value={editCountry.population}
+                    onChange={(e) =>
+                      setEditCountry({
+                        ...editCountry,
+                        population: e.target.value,
+                      })
+                    }
+                    placeholder="Population"
+                  />
+                  <div className={styles.editButtons}>
+                    <button className={styles.button} type="submit">
+                      {lang === "ka" ? "შენახვა" : "Save"}
+                    </button>
+                    <button
+                      className={styles.button}
+                      type="button"
+                      onClick={() => setEditCountry(null)} // Close the edit form
+                    >
+                      {lang === "ka" ? "დახურვა" : "Close"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         ))}
       </div>
-
-      {editCountry && (
-        <div className={styles.editSection}>
-          <h3>{lang === "ka" ? "რედაქტირება" : "Edit Country"}</h3>
-          <form
-            className={styles.editWindow}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleUpdateCountry(editCountry); // Handle update submission
-            }}
-          >
-            <input
-              type="text"
-              value={editCountry.nameKa}
-              onChange={(e) =>
-                setEditCountry({ ...editCountry, nameKa: e.target.value })
-              }
-              placeholder="Georgian Name"
-            />
-            <input
-              type="text"
-              value={editCountry.nameEn}
-              onChange={(e) =>
-                setEditCountry({ ...editCountry, nameEn: e.target.value })
-              }
-              placeholder="English Name"
-            />
-            <input
-              type="text"
-              value={editCountry.flag}
-              onChange={(e) =>
-                setEditCountry({ ...editCountry, flag: e.target.value })
-              }
-              placeholder="Flag URL"
-            />
-            <input
-              type="text"
-              value={editCountry.capital}
-              onChange={(e) =>
-                setEditCountry({ ...editCountry, capital: e.target.value })
-              }
-              placeholder="Capital"
-            />
-            <input
-              type="text"
-              value={editCountry.population}
-              onChange={(e) =>
-                setEditCountry({ ...editCountry, population: e.target.value })
-              }
-              placeholder="Population"
-            />
-            <div className={styles.editButtons}>
-              <button className={styles.button} type="submit">
-                {lang === "ka" ? "შენახვა" : "Save"}
-              </button>
-              <button
-                className={styles.button}
-                type="button"
-                onClick={() => setEditCountry(null)} // Close the edit form
-              >
-                {lang === "ka" ? "დახურვა" : "Close"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
     </>
   );
 };

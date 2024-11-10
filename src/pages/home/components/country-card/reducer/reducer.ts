@@ -71,40 +71,40 @@ export const countriesReducer = (
     return [...countriesList, newCountry];
   }
 
-  if (action.type === "delete") {
-    const updatedCountriesList = countriesList.map((country) => {
-      if (country.id === action.payload.id) {
-        return { ...country, isDeleted: true };
-      }
-      return country;
-    });
+  // if (action.type === "delete") {
+  //   const updatedCountriesList = countriesList.map((country) => {
+  //     if (country.id === action.payload.id) {
+  //       return { ...country, isDeleted: true };
+  //     }
+  //     return country;
+  //   });
 
-    const deletedCountry = updatedCountriesList.find(
-      (country) => country.id === action.payload.id,
-    );
-    const filteredCountriesList = updatedCountriesList.filter(
-      (country) => country.id !== action.payload.id,
-    );
+  // const deletedCountry = updatedCountriesList.find(
+  //   (country) => country.id === action.payload.id,
+  // );
+  // const filteredCountriesList = updatedCountriesList.filter(
+  //   (country) => country.id !== action.payload.id,
+  // );
 
-    if (deletedCountry) {
-      return [...filteredCountriesList];
-      // deletedCountry   if displaying the deleted country  is required, add deletedCountry in an array.
-    }
-  }
+  //   if (deletedCountry) {
+  //     return [...filteredCountriesList];
+  //     // deletedCountry   if displaying the deleted country  is required, add deletedCountry in an array.
+  //   }
+  // }
 
-  if (action.type === "undo") {
-    const restoredCountry = action.payload.country;
-    const updatedCountriesList = countriesList.filter(
-      (country) => country.id !== restoredCountry.id,
-    );
+  // if (action.type === "undo") {
+  //   const restoredCountry = action.payload.country;
+  //   const updatedCountriesList = countriesList.filter(
+  //     (country) => country.id !== restoredCountry.id,
+  //   );
 
-    const indexToInsert = Number(restoredCountry.id) - 1;
-    updatedCountriesList.splice(indexToInsert, 0, {
-      ...restoredCountry,
-      isDeleted: false,
-    });
-    return updatedCountriesList;
-  }
+  //   const indexToInsert = Number(restoredCountry.id) - 1;
+  //   updatedCountriesList.splice(indexToInsert, 0, {
+  //     ...restoredCountry,
+  //     isDeleted: false,
+  //   });
+  //   return updatedCountriesList;
+  // }
 
   // Update a country (edit the country details)
   if (action.type === "update") {
