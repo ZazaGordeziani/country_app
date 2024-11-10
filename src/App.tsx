@@ -1,8 +1,8 @@
 import "@/App.css";
 // import HomeListView from "@/pages/views/list";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Suspense } from "react";
-import { lazy } from "react";
+import { Suspense, lazy } from "react";
+// import { lazy } from "react";
 import PageNotFound from "@/pages/404";
 
 // import CountryDetailedInfo from "@/pages/views/countryDetails";

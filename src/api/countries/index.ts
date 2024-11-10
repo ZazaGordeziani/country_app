@@ -1,13 +1,14 @@
 import { httpClient } from "@/api";
+import { Country } from "@/pages/views/countryDetails";
 import { CountryReducerInitialState } from "@/pages/home/components/country-card/reducer/reducer";
 
 // export const getCountries = () => {
 //   return httpClient.get("/countries").then((res) => res.data);
 // };
 
-export const getCountries = async () => {
+export const getCountries = async (): Promise<CountryReducerInitialState> => {
   try {
-    const response = await httpClient.get("/countries").then((res) => res.data); // Await the API call
+    const response = await httpClient.get("/countries"); // Await the API call
     return response.data; // inca scase of success return the data
   } catch (error) {
     console.error("Error fetching countries:", error);
@@ -29,6 +30,29 @@ export const updateCountry = ({
   return httpClient.put(`/countries/${id}`, payload);
 };
 
+export const createCountry = async (countryFields: {
+  nameKa: string;
+  nameEn: string;
+  flag: string;
+}) => {
+  try {
+    const response = await httpClient.post("/countries", countryFields);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating country:", error);
+    throw error;
+  }
+};
+
+export const getCountry = async (id: string): Promise<Country> => {
+  try {
+    const response = await httpClient.get(`/countries/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching country details:", error);
+    throw error;
+  }
+};
 // useEffect(() => {
 //   axios
 //     .get("http://localhost:3000/countries") // Fetch countries inside useEffect

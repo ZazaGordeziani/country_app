@@ -1,11 +1,74 @@
 {
   "countries": [
     {
+      "nameEn": "South Georgia",
+      "nameKa": "",
+      "id": "239",
+      "population": 30,
+      "capital": "King Edward Point",
+      "flag": "https://flagcdn.com/gs.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Grenada",
+      "nameKa": "",
+      "id": "308",
+      "population": 112519,
+      "capital": "St. George's",
+      "flag": "https://flagcdn.com/gd.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Switzerland",
+      "nameKa": "",
+      "id": "756",
+      "population": 8654622,
+      "capital": "Bern",
+      "flag": "https://flagcdn.com/ch.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Sierra Leone",
+      "nameKa": "",
+      "id": "694",
+      "population": 7976985,
+      "capital": "Freetown",
+      "flag": "https://flagcdn.com/sl.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Hungary",
+      "nameKa": "",
+      "id": "348",
+      "population": 9749763,
+      "capital": "Budapest",
+      "flag": "https://flagcdn.com/hu.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Taiwan",
+      "nameKa": "",
+      "id": "158",
+      "population": 23503349,
+      "capital": "Taipei",
+      "flag": "https://flagcdn.com/tw.svg",
+      "vote": 0
+    },
+    {
+      "nameEn": "Wallis and Futuna",
+      "nameKa": "",
+      "id": "876",
+      "population": 11750,
+      "capital": "Mata-Utu",
+      "flag": "https://flagcdn.com/wf.svg",
+      "vote": 0
+    },
+    {
       "nameEn": "Barbados",
       "nameKa": "",
       "id": "052",
       "population": 287371,
-      "capital": "Bridgeto",
+      "capital": "Bridgetown",
       "flag": "https://flagcdn.com/bb.svg",
       "vote": 0
     },
@@ -1887,7 +1950,8 @@
       "population": 1775378,
       "capital": "Pristina",
       "flag": "https://flagcdn.com/xk.svg",
-      "vote": 0
+      "vote": 0,
+      "id": "5b93"
     },
     {
       "nameEn": "Kuwait",

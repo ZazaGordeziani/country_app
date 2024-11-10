@@ -10,7 +10,12 @@ import {
   CountryReducerInitialState,
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
-import { deleteCountry, getCountries, updateCountry } from "@/api/countries";
+import {
+  createCountry,
+  deleteCountry,
+  getCountries,
+  updateCountry,
+} from "@/api/countries";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const text = {
@@ -32,7 +37,11 @@ const Card: React.FC = () => {
     CountryReducerInitialState[0] | null
   >(null);
 
-  const { data, isLoading, isError } = useQuery<CountryReducerInitialState>({
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["countries-list"],
     queryFn: getCountries,
     retry: 0,
@@ -45,7 +54,7 @@ const Card: React.FC = () => {
   console.log(data);
   // console.log(isLoading);
   // console.log(isError);
-
+  // console.log(countriesList);
   const queryClient = useQueryClient();
   const { mutate: updateCountryMutate } = useMutation({
     mutationFn: deleteCountry,
@@ -65,6 +74,34 @@ const Card: React.FC = () => {
     dispatch({ type: "sort", payload: { sortType } });
   };
 
+  // const handleCreateCountry = (countryFields: {
+  //   nameKa: string;
+  //   nameEn: string;
+  //   flag: string;
+  // }) => {
+  //   if (
+  //     !countryFields.nameKa ||
+  //     !countryFields.nameEn ||
+  //     countryFields.nameEn.length < 2 ||
+  //     countryFields.nameKa.length < 2
+  //   ) {
+  //     setFormValidationErrorMsg(
+  //       "Country name should consist of more than 2 letters!!!",
+  //     );
+  //   }
+  //   dispatch({ type: "create", payload: { countryFields } });
+  // };
+
+  const { mutate: createCountryMutate } = useMutation({
+    mutationFn: createCountry, // Assume createCountry is your POST function
+    onSuccess: () => {
+      queryClient.invalidateQueries(["countries-list"]); // Invalidate and refetch countries list
+    },
+    onError: (error) => {
+      console.error("Error creating country:", error);
+    },
+  });
+
   const handleCreateCountry = (countryFields: {
     nameKa: string;
     nameEn: string;
@@ -79,8 +116,10 @@ const Card: React.FC = () => {
       setFormValidationErrorMsg(
         "Country name should consist of more than 2 letters!!!",
       );
+      return;
     }
-    dispatch({ type: "create", payload: { countryFields } });
+
+    createCountryMutate(countryFields); // Call the mutation function
   };
 
   const handleCountryDelete = (e: MouseEvent, id: string) => {
