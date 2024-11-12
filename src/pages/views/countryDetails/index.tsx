@@ -65,6 +65,8 @@ export interface Country {
   capital: string;
   population: number;
   flag: string;
+  vote: number;
+  isDeleted: boolean;
 }
 
 const CountryDetailedInfo = () => {

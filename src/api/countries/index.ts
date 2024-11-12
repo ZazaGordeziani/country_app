@@ -30,6 +30,23 @@ export const updateCountry = ({
   return httpClient.put(`/countries/${id}`, payload);
 };
 
+// update vote
+// export const updateVote = ({
+//   vote,
+//   payload,
+// }: {
+//   vote: number;
+//   payload: CountryReducerInitialState[0];
+// }) => {
+//   const response = httpClient.get(`/countries/${vote}`);
+
+//   const currentVote = response.data.vote
+//   const addedVote = response +1
+//   return httpClient.put(`${}`, payload);
+// };
+
+//country creation
+
 export const createCountry = async (countryFields: {
   nameKa: string;
   nameEn: string;
@@ -53,21 +70,58 @@ export const getCountry = async (id: string): Promise<Country> => {
     throw error;
   }
 };
-// useEffect(() => {
-//   axios
-//     .get("http://localhost:3000/countries") // Fetch countries inside useEffect
-//     .then((response) => {
-//       const recievedCountries = response.data;
-//       dispatch({
-//         type: "set_Data",
-//         payload: recievedCountries, // Pass the countries array directly
-//       });
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching countries:", error); // In case of error
-//     });
-// }, []);
 
-// useEffect(() => {
-//   console.log("Updated countriesList:", countriesList);
-// }, [countriesList]);
+export const updateVote = async ({
+  id,
+  currentVote,
+}: {
+  id: string;
+  currentVote: number;
+}) => {
+  try {
+    //  Fetch the full  data
+    const countryResponse = await httpClient.get(`/countries/${id}`);
+    const countryData = countryResponse.data;
+
+    // Increse the vote
+    const updatedVote = currentVote + 1;
+
+    //  data with updated vote
+    const updatedCountry = {
+      ...countryData,
+      vote: updatedVote,
+    };
+
+    // send new data back to server
+    const response = await httpClient.put(`/countries/${id}`, updatedCountry);
+
+    return response.data.vote;
+  } catch (error) {
+    console.error("Error updating vote:", error);
+    throw error;
+  }
+};
+
+export const getDataForSorting = async ({
+  queryKey,
+}: {
+  queryKey: [string, "asc" | "desc"];
+}): Promise<CountryReducerInitialState> => {
+  try {
+    const [, sortType] = queryKey; // Destructure the queryKey to get the sortType
+
+    const response = await httpClient.get("/countries"); // Fetch all countries
+    const countries = response.data; // Get the data
+
+    // Sort countries based on the sortType (ascending or descending)
+    const sortedCountries = countries.sort((a: Country, b: Country) => {
+      const compare = a.vote - b.vote; // Sorting by name (can be changed)
+      return sortType === "asc" ? compare : -compare;
+    });
+
+    return sortedCountries; // Return sorted countries
+  } catch (error) {
+    console.error("Error fetching countries with sorting:", error);
+    throw error;
+  }
+};

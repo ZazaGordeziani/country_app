@@ -1,12 +1,13 @@
-import React, { useReducer, MouseEvent, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import CountryName from "@/pages/home/components/country-card/country-name/countryName";
 import CountryFlag from "@/pages/home/components/country-card/country-flag/country-flag";
-import Vote from "@/pages/home/components/country-card/vote";
-import Sorting from "@/pages/home/components/country-card/sorting";
+// import Vote from "@/pages/home/components/country-card/vote";
+// import Sorting from "@/pages/home/components/country-card/sorting";
 import CountryCreateForm from "@/pages/home/components/country-card/country-create-form/country-create-from";
 import {
-  countriesReducer,
+  // countriesReducer,
+  // countriesReducer,
   CountryReducerInitialState,
 } from "@/pages/home/components/country-card/reducer/reducer";
 import styles from "./card.module.css";
@@ -14,9 +15,13 @@ import {
   createCountry,
   deleteCountry,
   getCountries,
+  // getDataForSorting,
   updateCountry,
+  updateVote,
 } from "@/api/countries";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Sorting from "@/pages/home/components/country-card/sorting";
+import Vote from "@/pages/home/components/country-card/vote";
 
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
@@ -32,13 +37,16 @@ const text = {
 const Card: React.FC = () => {
   const { lang } = useParams();
   const [formValidationErrorMsg, setFormValidationErrorMsg] = useState("");
-  const [countriesList, dispatch] = useReducer(countriesReducer, []);
+  // const [countriesLists, dispatch] = useReducer(countriesReducer, []);
   const [editCountry, setEditCountry] = useState<
     CountryReducerInitialState[0] | null
   >(null);
 
+  const queryClient = useQueryClient();
+
+  //data retrieving
   const {
-    data = [],
+    data: countriesList = [],
     isLoading,
     isError,
   } = useQuery({
@@ -48,63 +56,20 @@ const Card: React.FC = () => {
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (data) {
-      dispatch({ type: "set_Data", payload: data });
-    }
-  });
-
-  console.log(data);
-  // console.log(isLoading);
-  // console.log(isError);
-  // console.log(countriesList);
-  const queryClient = useQueryClient();
-  const { mutate: updateCountryMutate } = useMutation({
-    mutationFn: deleteCountry,
+  //country creation (mutation)
+  const { mutate: createCountryMutate } = useMutation({
+    mutationFn: createCountry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries-list"] });
-    },
-    onError: (error) => {
-      console.error("Error deleting country:", error);
-    },
-  });
-
-  const handleCountryUpvote = (id: string) => () => {
-    dispatch({ type: "upvote", payload: { id } });
-  };
-
-  const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
-    dispatch({ type: "sort", payload: { sortType } });
-  };
-
-  // const handleCreateCountry = (countryFields: {
-  //   nameKa: string;
-  //   nameEn: string;
-  //   flag: string;
-  // }) => {
-  //   if (
-  //     !countryFields.nameKa ||
-  //     !countryFields.nameEn ||
-  //     countryFields.nameEn.length < 2 ||
-  //     countryFields.nameKa.length < 2
-  //   ) {
-  //     setFormValidationErrorMsg(
-  //       "Country name should consist of more than 2 letters!!!",
-  //     );
-  //   }
-  //   dispatch({ type: "create", payload: { countryFields } });
-  // };
-
-  const { mutate: createCountryMutate } = useMutation({
-    mutationFn: createCountry, // Assume createCountry is your POST function
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["countries-list"] }); // Invalidate and refetch countries list
     },
     onError: (error) => {
       console.error("Error creating country:", error);
     },
   });
 
+  // console.log(countriesLists);
+
+  //country creation functionality
   const handleCreateCountry = (countryFields: {
     nameKa: string;
     nameEn: string;
@@ -122,15 +87,39 @@ const Card: React.FC = () => {
       return;
     }
 
-    createCountryMutate(countryFields); // Call the mutation function
+    // Call the mutation function
+    createCountryMutate(countryFields);
   };
 
-  const handleCountryDelete = (e: MouseEvent, id: string) => {
+  //
+  //
+  //
+
+  // Handle country delete
+  const { mutate: deleteCountryMutate } = useMutation({
+    mutationFn: deleteCountry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["countries-list"] });
+    },
+    onError: (error) => {
+      console.error("Error deleting country:", error);
+    },
+  });
+
+  const handleCountryDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    updateCountryMutate({ id });
-    dispatch({ type: "delete", payload: { id } });
+
+    const countryToDelete = countriesList.find((country) => country.id === id);
+
+    if (countryToDelete) {
+      console.log("Deleted country name:", countryToDelete.nameEn); // Log the name of the country
+      console.log("Deleted country object:", countryToDelete); // Log the entire country object
+    }
+
+    deleteCountryMutate({ id });
   };
 
+  //edit section
   const handleEditCountry = (country: CountryReducerInitialState[0]) => {
     setEditCountry(country);
   };
@@ -138,6 +127,8 @@ const Card: React.FC = () => {
   const { mutate: updateCountryMutation } = useMutation({
     mutationFn: updateCountry,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["countries-list"] });
+
       console.log("Country updated successfully!");
     },
     onError: (error) => {
@@ -148,17 +139,54 @@ const Card: React.FC = () => {
   const handleUpdateCountry = async (
     updatedCountry: CountryReducerInitialState[0],
   ) => {
+    // Perform the mutation directly, no need to use the reducer or set state
     updateCountryMutation({ id: updatedCountry.id, payload: updatedCountry });
-    dispatch({ type: "update", payload: { country: updatedCountry } });
-    setEditCountry(null);
+  };
+
+  // const handleCountryUpvote = (id: string) => () => {
+  //   dispatch({ type: "upvote", payload: { id } });
+  // };
+
+  // Mutation for updating the vote
+  const { mutate: updateVoteMutation } = useMutation({
+    mutationFn: updateVote,
+    onSuccess: () => {
+      // Invalidate queries to update the countries list
+      queryClient.invalidateQueries({ queryKey: ["countries-list"] });
+    },
+    onError: (error) => {
+      console.error("Error updating vote:", error);
+    },
+  });
+
+  // Handler for upvoting
+  const handleUpvote = (id: string, currentVote: number) => {
+    // Increment the current vote by 1
+    updateVoteMutation({ id, currentVote });
+  };
+
+  // const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
+  //   dispatch({ type: "sort", payload: { sortType } });
+  // };
+  const handleSort = (sortType: "asc" | "desc") => {
+    // Trigger refetch with the new sorting type
+    queryClient.invalidateQueries({
+      queryKey: ["countries-list-sorted", sortType],
+    });
   };
 
   return (
     <>
-      <Sorting
+      {/* <Sorting
         onSortAsc={() => handleCountriesSortByLikes("asc")}
         onSortDesc={() => handleCountriesSortByLikes("desc")}
+      /> */}
+
+      <Sorting
+        onSortAsc={() => handleSort("asc")}
+        onSortDesc={() => handleSort("desc")}
       />
+
       <CountryCreateForm
         errorMsg={formValidationErrorMsg}
         onCountryCreate={handleCreateCountry}
@@ -176,8 +204,14 @@ const Card: React.FC = () => {
             <CountryName
               name={lang === "ka" ? country.nameKa : country.nameEn}
             />
-            <Vote
+            {/* <Vote
               onUpVote={handleCountryUpvote(country.id)}
+              voteCount={country.vote}
+              isDeleted={country.isDeleted}
+            /> */}
+
+            <Vote
+              onUpVote={() => handleUpvote(country.id, country.vote)}
               voteCount={country.vote}
               isDeleted={country.isDeleted}
             />
@@ -288,3 +322,49 @@ const Card: React.FC = () => {
 };
 
 export default Card;
+
+// const { mutate: updateCountryMutate } = useMutation({
+//   mutationFn: deleteCountry,
+//   onSuccess: () => {
+//     queryClient.invalidateQueries({ queryKey: ["countries-list"] });
+//   },
+//   onError: (error) => {
+//     console.error("Error deleting country:", error);
+//   },
+// });
+
+// const handleCountryUpvote = (id: string) => () => {
+//   dispatch({ type: "upvote", payload: { id } });
+// };
+
+// const handleCountriesSortByLikes = (sortType: "asc" | "desc") => {
+//   dispatch({ type: "sort", payload: { sortType } });
+// };
+
+// const handleCreateCountry = (countryFields: {
+//   nameKa: string;
+//   nameEn: string;
+//   flag: string;
+// }) => {
+//   if (
+//     !countryFields.nameKa ||
+//     !countryFields.nameEn ||
+//     countryFields.nameEn.length < 2 ||
+//     countryFields.nameKa.length < 2
+//   ) {
+//     setFormValidationErrorMsg(
+//       "Country name should consist of more than 2 letters!!!",
+//     );
+//   }
+//   dispatch({ type: "create", payload: { countryFields } });
+// };
+
+// const { mutate: createCountryMutate } = useMutation({
+//   mutationFn: createCountry, // Assume createCountry is your POST function
+//   onSuccess: () => {
+//     queryClient.invalidateQueries({ queryKey: ["countries-list"] }); // Invalidate and refetch countries list
+//   },
+//   onError: (error) => {
+//     console.error("Error creating country:", error);
+//   },
+// });
