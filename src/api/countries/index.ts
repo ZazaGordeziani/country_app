@@ -102,26 +102,26 @@ export const updateVote = async ({
   }
 };
 
-// export const getDataForSorting = async ({
-//   queryKey,
-// }: {
-//   queryKey: [string, "asc" | "desc"];
-// }): Promise<CountryReducerInitialState> => {
-//   try {
-//     const [, sortType] = queryKey; // Destructure the queryKey to get the sortType
+export const getDataForSorting = async ({
+  queryKey,
+}: {
+  queryKey: [string, "asc" | "desc"];
+}): Promise<CountryReducerInitialState> => {
+  try {
+    const [, sortType] = queryKey; // Destructure the queryKey to get the sortType
 
-//     const response = await httpClient.get("/countries"); // Fetch all countries
-//     const countries = response.data; // Get the data
+    const response = await httpClient.get("/countries"); // Fetch all countries
+    const countries = response.data; // Get the data
 
-//     // Sort countries based on the sortType (ascending or descending)
-//     const sortedCountries = countries.sort((a: Country, b: Country) => {
-//       const compare = a.vote - b.vote; // Sorting by name (can be changed)
-//       return sortType === "asc" ? compare : -compare;
-//     });
+    // Sort countries based on the sortType (ascending or descending)
+    const sortedCountries = countries.sort((a: Country, b: Country) => {
+      const compare = a.vote - b.vote; // Sorting by name (can be changed)
+      return sortType === "asc" ? compare : -compare;
+    });
 
-//     return sortedCountries; // Return sorted countries
-//   } catch (error) {
-//     console.error("Error fetching countries with sorting:", error);
-//     throw error;
-//   }
-// };
+    return sortedCountries; // Return sorted countries
+  } catch (error) {
+    console.error("Error fetching countries with sorting:", error);
+    throw error;
+  }
+};

@@ -42,6 +42,8 @@ const Card: React.FC = () => {
     CountryReducerInitialState[0] | null
   >(null);
 
+  const queryClient = useQueryClient();
+
   //data retrieving
   const {
     data: countriesList = [],
@@ -53,8 +55,6 @@ const Card: React.FC = () => {
     retry: 0,
     refetchOnWindowFocus: false,
   });
-
-  const queryClient = useQueryClient();
 
   //country creation (mutation)
   const { mutate: createCountryMutate } = useMutation({
