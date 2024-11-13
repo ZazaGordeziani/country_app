@@ -41,6 +41,7 @@ const Card: React.FC = () => {
   const [editCountry, setEditCountry] = useState<
     CountryReducerInitialState[0] | null
   >(null);
+  const [sortType, setSortType] = useState<"asc" | "desc">();
 
   const queryClient = useQueryClient();
 
@@ -50,8 +51,8 @@ const Card: React.FC = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["countries-list"],
-    queryFn: getCountries,
+    queryKey: ["countries-list", sortType],
+    queryFn: () => getCountries(sortType),
     retry: 0,
     refetchOnWindowFocus: false,
   });
@@ -170,9 +171,7 @@ const Card: React.FC = () => {
   // };
   const handleSort = (sortType: "asc" | "desc") => {
     // Trigger refetch with the new sorting type
-    queryClient.invalidateQueries({
-      queryKey: ["countries-list-sorted", sortType],
-    });
+    setSortType(sortType);
   };
 
   return (

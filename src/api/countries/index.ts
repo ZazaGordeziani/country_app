@@ -6,9 +6,19 @@ import { CountryReducerInitialState } from "@/pages/home/components/country-card
 //   return httpClient.get("/countries").then((res) => res.data);
 // };
 
-export const getCountries = async (): Promise<CountryReducerInitialState> => {
+export const getCountries = async (
+  sortType?: "asc" | "desc",
+): Promise<CountryReducerInitialState> => {
   try {
-    const response = await httpClient.get("/countries"); // Await the API call
+    const searchParams = new URLSearchParams();
+    if (sortType) {
+      searchParams.append("_sort", sortType === "asc" ? "vote" : "-vote");
+    }
+
+    const response = await httpClient.get(
+      "/countries" +
+        (searchParams.size > 0 ? `?${searchParams.toString()}` : ""),
+    ); // Await the API call
     return response.data; // inca scase of success return the data
   } catch (error) {
     console.error("Error fetching countries:", error);
