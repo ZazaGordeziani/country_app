@@ -193,10 +193,10 @@ const Card: React.FC = () => {
                 }
                 style={{
                   position: "absolute",
-                  top: `${virtualItem.start}px`,
+                  top: 0,
                   left: 0,
-                  right: 0,
-                  height: "300px",
+                  height: `${virtualItem.size}px`,
+                  transform: `translateY(${virtualItem.start}px)`,
                 }}
               >
                 <CountryName
