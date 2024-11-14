@@ -7,7 +7,7 @@
       "population": 30,
       "capital": "King Edward Point",
       "flag": "https://flagcdn.com/gs.svg",
-      "vote": 45
+      "vote": 0
     },
     {
       "nameEn": "Grenada",
@@ -16,7 +16,7 @@
       "population": 112519,
       "capital": "St. George's",
       "flag": "https://flagcdn.com/gd.svg",
-      "vote": 41
+      "vote": 0
     },
     {
       "nameEn": "Switzerland",
@@ -25,7 +25,7 @@
       "population": 8654622,
       "capital": "Bern",
       "flag": "https://flagcdn.com/ch.svg",
-      "vote": 10
+      "vote": 0
     },
     {
       "nameEn": "Sierra Leone",
@@ -34,7 +34,7 @@
       "population": 7976985,
       "capital": "Freetown",
       "flag": "https://flagcdn.com/sl.svg",
-      "vote": 43
+      "vote": 0
     },
     {
       "nameEn": "Hungary",
@@ -43,7 +43,7 @@
       "population": 9749763,
       "capital": "Budapest",
       "flag": "https://flagcdn.com/hu.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Taiwan",
@@ -52,7 +52,7 @@
       "population": 23503349,
       "capital": "Taipei",
       "flag": "https://flagcdn.com/tw.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Wallis and Futuna",
@@ -61,7 +61,7 @@
       "population": 11750,
       "capital": "Mata-Utu",
       "flag": "https://flagcdn.com/wf.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Barbados",
@@ -70,7 +70,7 @@
       "population": 287371,
       "capital": "Bridgetown",
       "flag": "https://flagcdn.com/bb.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Pitcairn Islands",
@@ -79,7 +79,7 @@
       "population": 56,
       "capital": "Adamstown",
       "flag": "https://flagcdn.com/pn.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Ivory Coast",
@@ -88,7 +88,7 @@
       "population": 26378275,
       "capital": "Yamoussoukro",
       "flag": "https://flagcdn.com/ci.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Tunisia",
@@ -97,7 +97,7 @@
       "population": 11818618,
       "capital": "Tunis",
       "flag": "https://flagcdn.com/tn.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Italy",
@@ -106,7 +106,7 @@
       "population": 59554023,
       "capital": "Rome",
       "flag": "https://flagcdn.com/it.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Benin",
@@ -115,7 +115,7 @@
       "population": 12123198,
       "capital": "Porto-Novo",
       "flag": "https://flagcdn.com/bj.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Indonesia",
@@ -124,7 +124,7 @@
       "population": 273523621,
       "capital": "Jakarta",
       "flag": "https://flagcdn.com/id.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Cape Verde",
@@ -133,7 +133,7 @@
       "population": 555988,
       "capital": "Praia",
       "flag": "https://flagcdn.com/cv.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Saint Kitts and Nevis",
@@ -142,7 +142,7 @@
       "population": 53192,
       "capital": "Basseterre",
       "flag": "https://flagcdn.com/kn.svg",
-      "vote": 1
+      "vote": 0
     },
     {
       "nameEn": "Laos",
@@ -1950,8 +1950,7 @@
       "population": 1775378,
       "capital": "Pristina",
       "flag": "https://flagcdn.com/xk.svg",
-      "vote": 0,
-      "id": "d376"
+      "vote": 0
     },
     {
       "nameEn": "Kuwait",
