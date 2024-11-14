@@ -71,6 +71,7 @@ export interface Country {
 
 const CountryDetailedInfo = () => {
   const { id } = useParams<{ id: string }>(); // Get `id` from URL params
+  console.log(id);
 
   // Check if 'id' exists before calling useQuery (Optional, you can also use 'enabled')
   // const queryKey = id ? ["country", id] : []; // Only set the queryKey if 'id' is available

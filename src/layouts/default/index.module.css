@@ -12,14 +12,12 @@
   border:
     1px,
     blue solid;
-  /* padding: 5px; */
   position: relative;
   display: inline-block;
 }
 .dropdown {
   width: 100%;
   position: absolute;
-  background-color: white;
   border: 1px solid #ccc;
   z-index: 100;
   display: flex;

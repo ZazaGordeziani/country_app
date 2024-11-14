@@ -7,12 +7,12 @@ import { CountryReducerInitialState } from "@/pages/home/components/country-card
 // };
 
 export const getCountries = async (
-  sortType?: "asc" | "desc",
+  sortType?: "like" | "-like",
 ): Promise<CountryReducerInitialState> => {
   try {
     const searchParams = new URLSearchParams();
     if (sortType) {
-      searchParams.append("_sort", sortType === "asc" ? "vote" : "-vote");
+      searchParams.append("_sort", sortType === "like" ? "vote" : "-vote");
     }
 
     const response = await httpClient.get(
@@ -81,6 +81,70 @@ export const getCountry = async (id: string): Promise<Country> => {
   }
 };
 
+//
+//
+
+// export const updateVote = async ({
+//   id,
+//   currentVote,
+// }: {
+//   id: string;
+//   currentVote: number;
+// }) => {
+//   try {
+//     //  Fetch the full  data
+//     const countryResponse = await httpClient.get(`/countries/${id}`);
+//     const countryData = countryResponse.data;
+
+//     // Increse the vote
+//     const updatedVote = currentVote + 1;
+
+//     //  data with updated vote
+//     const updatedCountry = {
+//       ...countryData,
+//       vote: updatedVote,
+//     };
+
+//     // send new data back to server
+//     const response = await httpClient.put(`/countries/${id}`, updatedCountry);
+
+//     return response.data.vote;
+//   } catch (error) {
+//     console.error("Error updating vote:", error);
+//     throw error;
+//   }
+// };
+
+//
+// export const updateVote = async ({
+//   id,
+//   currentVote,
+// }: {
+//   id: string;
+//   currentVote: number;
+// }) => {
+//   try {
+//     // Increment the vote by 1
+//     const updatedVote = currentVote + 1;
+
+//     // Create the updated country object with the new vote
+//     const updatedCountry = {
+//       vote: updatedVote,
+//     };
+
+//     // Send the updated data to the server
+//     const response = await httpClient.patch(`/countries/${id}`, updatedCountry);
+
+//     // Return the updated vote count
+//     return response.data.vote; // Assuming response.data contains the updated vote
+//   } catch (error) {
+//     console.error("Error updating vote:", error);
+//     throw error;
+//   }
+// };
+
+//
+
 export const updateVote = async ({
   id,
   currentVote,
@@ -89,23 +153,19 @@ export const updateVote = async ({
   currentVote: number;
 }) => {
   try {
-    //  Fetch the full  data
-    const countryResponse = await httpClient.get(`/countries/${id}`);
-    const countryData = countryResponse.data;
-
-    // Increse the vote
+    // Increment the vote by 1
     const updatedVote = currentVote + 1;
 
-    //  data with updated vote
+    // Create the updated country object with the new vote
     const updatedCountry = {
-      ...countryData,
       vote: updatedVote,
     };
 
-    // send new data back to server
-    const response = await httpClient.put(`/countries/${id}`, updatedCountry);
+    // Send the updated data to the server
+    const response = await httpClient.patch(`/countries/${id}`, updatedCountry);
 
-    return response.data.vote;
+    // Return the updated vote count
+    return response.data.vote; // Assuming response.data contains the updated vote
   } catch (error) {
     console.error("Error updating vote:", error);
     throw error;
