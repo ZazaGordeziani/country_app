@@ -6,7 +6,7 @@ const Header: React.FC<PropsWithChildren> = ({ children }) => {
   const childArray = React.Children.toArray(children);
   const headerTitle = childArray[0];
   const navItems = childArray[1];
-
+  console.log(headerTitle);
   return (
     <header className={styles.header}>
       <div className={styles.titleBox}>
