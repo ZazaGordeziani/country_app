@@ -19,11 +19,12 @@ import {
   updateCountry,
   updateVote,
 } from "@/api/countries";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Sorting from "@/pages/home/components/country-card/sorting";
 import Vote from "@/pages/home/components/country-card/vote";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useWindowSize } from "react-use";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const text = {
   moreInfoKa: "დამატებითი ინფორმაცია",
@@ -51,25 +52,66 @@ const Card: React.FC = () => {
   const sortType = searchParams.get("sortType") as "like" | "-like";
 
   // Data fetching
-  const {
-    data: countriesList = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["countries-list", sortType],
-    queryFn: () => getCountries(sortType),
-    retry: 0,
-    refetchOnWindowFocus: false,
-    gcTime: 1000 * 60,
-    staleTime: 1000 * 60,
+  // const {
+  //   data: countriesList = [],
+  //   isLoading,
+  //   isError,
+  // } = useQuery({
+  //   queryKey: ["countries-list", sortType],
+  //   queryFn: () => getCountries(sortType),
+  //   retry: 0,
+  //   refetchOnWindowFocus: false,
+  //   gcTime: 1000 * 60,
+  //   staleTime: 1000 * 60,
+  // });
+
+  // //virtualizer
+  // const virtualizer = useWindowVirtualizer({
+  //   count: countriesList.length,
+  //   estimateSize: () => (width <= 768 ? 800 : 348),
+  //   overscan: 5, // How many items will be render outside the viewport
+  // });
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["countries-list", sortType],
+      queryFn: ({ pageParam = 1 }) =>
+        getCountries({ sortType, page: pageParam, limit: 10 }),
+      getNextPageParam: (lastPage) => lastPage.nextOffset,
+      initialPageParam: 1,
+    });
+
+  const allRows = data ? data.pages.flatMap((page) => page.rows) : [];
+
+  // Virtualizer
+  const virtualizer = useWindowVirtualizer({
+    count: hasNextPage ? allRows.length + 1 : allRows.length,
+    estimateSize: () => (width <= 768 ? 800 : 348),
+    overscan: 5,
   });
 
-  //virtualizer
-  const virtualizer = useWindowVirtualizer({
-    count: countriesList.length,
-    estimateSize: () => (width <= 768 ? 800 : 348),
-    overscan: 5, // How many items will be render outside the viewport
-  });
+  const virtualItems = virtualizer.getVirtualItems();
+
+  React.useEffect(() => {
+    const [lastItem] = [...virtualItems].reverse();
+
+    if (!lastItem) {
+      return;
+    }
+
+    if (
+      lastItem.index >= allRows.length - 1 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  }, [
+    hasNextPage,
+    fetchNextPage,
+    allRows.length,
+    isFetchingNextPage,
+    virtualItems,
+  ]);
 
   // Country creation mutation
   const { mutate: createCountryMutate } = useMutation({
@@ -111,6 +153,8 @@ const Card: React.FC = () => {
   const { mutate: deleteCountryMutate } = useMutation({
     mutationFn: deleteCountry,
     onSuccess: () => {
+      console.log("Country deleted");
+
       queryClient.invalidateQueries({ queryKey: ["countries-list"] });
     },
     onError: (error) => {
@@ -120,6 +164,7 @@ const Card: React.FC = () => {
 
   const handleCountryDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
+    console.log("Deleting country with id:", id);
     deleteCountryMutate({ id });
   };
 
@@ -141,7 +186,6 @@ const Card: React.FC = () => {
   const handleUpdateCountry = async (
     updatedCountry: CountryReducerInitialState[0],
   ) => {
-    // Perform the mutation directly, no need to use the reducer or set state
     updateCountryMutation({ id: updatedCountry.id, payload: updatedCountry });
   };
 
@@ -173,7 +217,8 @@ const Card: React.FC = () => {
 
       <div className={styles.countryCard}>
         {isLoading && "Loading..."}
-        {isError && "Error"}
+        {/* {isError && "Error"} */}
+        <div></div>
 
         {/* Virtualize the countries list */}
         <div
@@ -184,7 +229,7 @@ const Card: React.FC = () => {
           }}
         >
           {virtualizer.getVirtualItems().map((virtualItem) => {
-            const country = countriesList[virtualItem.index];
+            const country = allRows[virtualItem.index];
             return (
               <div
                 key={country.id}
@@ -221,7 +266,10 @@ const Card: React.FC = () => {
                     <div className={styles.deleteEditButtons}>
                       <button
                         className={styles.delete}
-                        onClick={(e) => handleCountryDelete(e, country.id)}
+                        onClick={(e) => {
+                          console.log("clicked");
+                          handleCountryDelete(e, country.id);
+                        }}
                       >
                         {lang === "ka" ? text.deleteKa : text.deleteEn}
                       </button>
@@ -242,6 +290,7 @@ const Card: React.FC = () => {
                       onSubmit={(e) => {
                         e.preventDefault();
                         handleUpdateCountry(editCountry);
+                        setEditCountry(null);
                       }}
                     >
                       <input
@@ -278,7 +327,7 @@ const Card: React.FC = () => {
                         placeholder="Flag URL"
                       />
                       <button type="submit">
-                        {lang === "ka" ? "გაუმჯობესება" : "Update"}
+                        {lang === "ka" ? "განახლება" : "Update"}
                       </button>
                     </form>
                   </div>

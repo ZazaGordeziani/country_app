@@ -8,26 +8,89 @@ import { CountryReducerInitialState } from "@/pages/home/components/country-card
 
 //
 
-//
+// export const getCountries = async (
+//   sortType?: "like" | "-like",
+// ): Promise<CountryReducerInitialState> => {
+//   try {
+//     const searchParams = new URLSearchParams();
 
-export const getCountries = async (
-  sortType?: "like" | "-like",
-): Promise<CountryReducerInitialState> => {
+//     // If sortType is provided, add _sort query parameter for sorting by vote
+//     if (sortType) {
+//       searchParams.append("_sort", sortType === "like" ? "vote" : "-vote");
+//     }
+
+//     // Make the API call with the searchParams (which may or may not contain _sort)
+//     const response = await httpClient.get(
+//       "/countries" +
+//         (searchParams.size > 0 ? `?${searchParams.toString()}` : ""),
+//     );
+
+//     // Return the response data on success
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching countries:", error);
+//     throw error;
+//   }
+// };
+
+// export const getCountries = async (
+//   sortType?: "like" | "-like",
+// ): Promise<CountryReducerInitialState> => {
+//   try {
+//     const searchParams = new URLSearchParams();
+
+//     // sorting based on votecounts
+//     if (sortType) {
+//       const order = sortType === "like" ? "asc" : "desc";
+//       searchParams.append("_sort", "vote");
+//       searchParams.append("_order", order);
+//     }
+
+//     const response = await httpClient.get(
+//       "/countries" +
+//         (searchParams.size > 0 ? `?${searchParams.toString()}` : ""),
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching countries:", error);
+//     throw error;
+//   }
+// };
+
+export const getCountries = async ({
+  sortType,
+  page = 1,
+  limit = 10,
+}: {
+  sortType?: "like" | "-like";
+  page: number;
+  limit: number;
+}): Promise<{ rows: CountryReducerInitialState; nextOffset?: number }> => {
   try {
     const searchParams = new URLSearchParams();
 
-    // sorting based on votecounts
+    // vote count sorting
     if (sortType) {
       const order = sortType === "like" ? "asc" : "desc";
       searchParams.append("_sort", "vote");
       searchParams.append("_order", order);
     }
 
+    // Pagination
+    searchParams.append("_page", String(page));
+    searchParams.append("_limit", String(limit));
+
     const response = await httpClient.get(
       "/countries" +
         (searchParams.size > 0 ? `?${searchParams.toString()}` : ""),
     );
-    return response.data;
+
+    const nextOffset = response.data.length < limit ? undefined : page + 1;
+
+    return {
+      rows: response.data,
+      nextOffset,
+    };
   } catch (error) {
     console.error("Error fetching countries:", error);
     throw error;
@@ -35,6 +98,7 @@ export const getCountries = async (
 };
 
 export const deleteCountry = ({ id }: { id: string | number }) => {
+  console.log("Deleting the following country:", id);
   return httpClient.delete(`/countries/${id}`);
 };
 
