@@ -230,6 +230,7 @@ const Card: React.FC = () => {
         >
           {virtualizer.getVirtualItems().map((virtualItem) => {
             const country = allRows[virtualItem.index];
+            if (!country) return null;
             return (
               <div
                 key={country.id}
